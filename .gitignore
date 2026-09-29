@@ -1,0 +1,18 @@
+# Dependencias
+node_modules/
+
+# Secretos
+.env
+*.env
+
+# Android
+.gradle/
+build/
+local.properties
+*.apk
+
+# IDE y sistema
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
