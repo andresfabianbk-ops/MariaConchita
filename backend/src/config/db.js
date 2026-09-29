@@ -1,12 +1,13 @@
 // Configuración de conexión a la base de datos MySQL
 const mysql = require('mysql2');
 
-// Crea el pool de conexiones (reutiliza conexiones en vez de abrir una nueva cada vez)
+// Crea el pool de conexiones (reutiliza conexiones en vez de abrir una nueva cada vez).
+// Las credenciales se leen del archivo backend/.env (ignorado por Git), nunca del código.
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'Andres1072',
-  database: 'mariaconchita_db',
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME || 'mariaconchita_db',
   waitForConnections: true,
   connectionLimit: 10
 });
