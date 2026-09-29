@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mariaconchita - Pedido a Domicilio</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <nav class="navbar">
+    <img src="../img/logo.png" alt="Mariaconchita" class="navbar-logo">
+    <ul class="navbar-menu">
+      <li><a href="../index.html">Inicio</a></li>
+      <li><a href="#">Pedidos a domicilio</a></li>
+      <li><a href="#">Cerrar sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- Registro de pedido a domicilio -->
+  <main class="pedido-container">
+    <div class="pedido-form">
+      <h1>Registrar Pedido a Domicilio</h1>
+
+      <label for="cliente-nombre">Nombre del cliente</label>
+      <input type="text" id="cliente-nombre" required>
+
+      <label for="cliente-telefono">Teléfono</label>
+      <input type="tel" id="cliente-telefono" required>
+
+      <label for="cliente-direccion">Dirección de entrega</label>
+      <input type="text" id="cliente-direccion" required>
+
+      <h2>Productos disponibles</h2>
+      <div id="lista-productos" class="lista-productos">
+        <!-- Los productos se cargan dinámicamente desde app.js -->
+      </div>
+
+      <h2>Resumen del pedido</h2>
+      <ul id="resumen-pedido" class="resumen-pedido">
+        <!-- Se llena dinámicamente al agregar productos -->
+      </ul>
+
+      <button id="btn-enviar-pedido" class="btn-primario">Enviar a cocina</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2026 Mariaconchita - Comidas Rápidas. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="../js/comun.js"></script>
+  <script src="../js/pedidos.js"></script>
+
+  <!-- Modal de personalización del producto -->
+  <div id="modal-personalizar" class="modal-overlay" style="display: none;">
+    <div class="tarjeta-personalizar">
+      <h3 id="personalizar-titulo"></h3>
+      <p class="personalizar-instruccion">Marca lo que deseas quitar:</p>
+      <div id="personalizar-ingredientes"></div>
+      <div class="personalizar-acciones">
+        <button id="btn-confirmar-personalizar" class="btn-primario">Agregar</button>
+        <button id="btn-cancelar-personalizar" class="btn-secundario">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

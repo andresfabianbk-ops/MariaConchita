@@ -1,0 +1,39 @@
+/* Botón principal: acciones importantes (Iniciar sesión, Enviar a cocina, Registrar pago) */
+.btn-primario {
+  background: linear-gradient(135deg, var(--naranja), #a84d20);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  transition: transform 0.15s, box-shadow 0.15s;
+  align-self: center;
+  width: auto;
+}
+
+.btn-primario:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(196,97,42,0.4);
+}
+
+.btn-primario:active {
+  transform: translateY(0);
+}
+
+/* Botón secundario: acciones de menor peso (Cancelar, Cerrar caja) */
+.btn-secundario {
+  background-color: transparent;
+  color: var(--naranja);
+  border: 1px solid var(--naranja);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-secundario:hover {
+  background-color: rgba(196,97,42,0.08);
+}

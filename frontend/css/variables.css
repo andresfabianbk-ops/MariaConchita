@@ -1,0 +1,66 @@
+/* Paleta de colores de la marca Mariaconchita */
+:root {
+  --naranja: #C4612A;
+  --rojo: #CC2020;
+  --crema: #FBF7ED;
+  --negro: #000000;
+}
+
+/* ==========================================================================
+   variables.css — Paleta de marca MariaConchita (fuente única de verdad)
+   ========================================================================== */
+
+:root {
+  /* Marca */
+  --naranja: #C4612A;
+  --naranja-oscuro: #A34F21;
+  --naranja-suave: #E8A876;
+  --rojo: #CC2020;
+  --rojo-oscuro: #A31818;
+  --crema: #F5EDD8;
+  --crema-clara: #FBF7ED;
+  --negro: #000000;
+  --negro-suave: #2A2420;
+
+  /* Neutrales derivados (para texto secundario, bordes, superficies) */
+  --gris-texto: #6B6058;
+  --gris-borde: #E4D9C4;
+  --gris-borde-fuerte: #D3C4A5;
+  --blanco: #FFFFFF;
+
+  /* Estados */
+  --exito: #4C7A3D;
+  --exito-fondo: #E7F0E2;
+  --alerta: #B8860B;
+  --alerta-fondo: #FBF0D9;
+  --peligro: var(--rojo);
+  --peligro-fondo: #F7E0DD;
+
+  /* Tipografía */
+  --fuente-titulo: 'Fraunces', Georgia, serif;
+  --fuente-cuerpo: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Escala de espaciado (base 4px) */
+  --esp-1: 4px;
+  --esp-2: 8px;
+  --esp-3: 12px;
+  --esp-4: 16px;
+  --esp-5: 24px;
+  --esp-6: 32px;
+  --esp-7: 48px;
+  --esp-8: 64px;
+
+  /* Radios y sombras */
+  --radio-s: 6px;
+  --radio-m: 10px;
+  --radio-l: 16px;
+  --sombra-card: 0 1px 2px rgba(42, 36, 32, 0.06), 0 4px 12px rgba(42, 36, 32, 0.05);
+  --sombra-modal: 0 12px 40px rgba(42, 36, 32, 0.25);
+  --transicion: 0.18s ease;
+
+  /* Layout */
+  --ancho-sidebar: 240px;
+  --ancho-sidebar-colapsado: 72px;
+  --alto-topbar: 64px;
+}
+

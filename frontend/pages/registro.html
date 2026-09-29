@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mariaconchita - Registro de Empleado</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <nav class="navbar">
+    <img src="../img/logo.png" alt="Mariaconchita" class="navbar-logo">
+    <ul class="navbar-menu">
+      <li><a href="../index.html">Inicio</a></li>
+      <li><a href="#">Menú</a></li>
+      <li><a href="#">Ayuda</a></li>
+    </ul>
+  </nav>
+
+  <!-- Formulario de registro -->
+  <main class="login-container">
+    <form id="form-registro" class="login-form registro-form">
+      <h1>Registrar Empleado</h1>
+
+      <div class="registro-grid">
+        <div class="campo">
+          <label for="tipoDocumento">Tipo de documento</label>
+          <select id="tipoDocumento" required>
+            <option value="">Seleccione</option>
+            <option value="CC">Cédula de ciudadanía</option>
+            <option value="TI">Tarjeta de identidad</option>
+            <option value="PPT">Permiso por protección temporal</option>
+            <option value="PEP">Permiso especial de permanencia</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="numeroDocumento">Número de documento</label>
+          <input type="number" id="numeroDocumento" maxlength="10" required>
+        </div>
+
+        <div class="campo">
+          <label for="nombres">Nombres</label>
+          <input type="text" id="nombres" required>
+        </div>
+
+        <div class="campo">
+          <label for="apellidos">Apellidos</label>
+          <input type="text" id="apellidos" required>
+        </div>
+
+        <div class="campo">
+          <label for="fechaNacimiento">Fecha de nacimiento</label>
+          <input type="date" id="fechaNacimiento" required>
+        </div>
+
+        <div class="campo">
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" required>
+        </div>
+
+        <div class="campo">
+          <label for="celular">Celular</label>
+          <input type="tel" id="celular">
+        </div>
+
+        <div class="campo">
+          <label for="cargo">Cargo</label>
+          <select id="cargo" required>
+            <option value="">Seleccione</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Mesero">Mesero</option>
+            <option value="Cajero">Cajero</option>
+            <option value="Cocinero">Cocinero</option>
+          </select>
+        </div>
+
+        <div class="campo campo-ancho">
+          <label for="contrasena">Contraseña</label>
+          <div class="campo-contrasena">
+            <input type="password" id="contrasena" required>
+            <span id="toggle-contrasena" class="icono-ojo">👁</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primario">Registrar</button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2026 Mariaconchita - Comidas Rápidas. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="../js/comun.js"></script>
+  <script src="../js/registro.js"></script>
+</body>
+</html>

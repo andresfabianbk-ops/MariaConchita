@@ -1,0 +1,1121 @@
+/* ============================================================
+   ADMIN.CSS — Panel de Administrador MariaConchita
+   Cubre: RF01 (menú), RF09 (empleados), RF10 (reportes),
+          RF11 (usuarios), RF12 (inventario)
+
+   Todos los selectores van prefijados con .app-admin para
+   aislar este archivo del resto del sistema (evita choques
+   con botones.css, login.css, pedidos.css, etc.)
+   ============================================================ */
+
+.app-admin {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---------- SIDEBAR ---------- */
+
+.app-admin .sidebar {
+  width: var(--ancho-sidebar);
+  flex-shrink: 0;
+  background: var(--negro-suave);
+  color: var(--crema-clara);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 40;
+  transition: transform var(--transicion);
+}
+
+.app-admin .sidebar__marca {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid rgba(245, 237, 216, 0.12);
+}
+
+.app-admin .sidebar__logo {
+  width: 72px;
+  height: 72px;
+  max-width: none;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.app-admin .sidebar__nombre {
+  font-family: var(--fuente-titulo);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.app-admin .sidebar__rol {
+  font-size: 0.72rem;
+  color: var(--naranja-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.app-admin .sidebar__nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  overflow-y: auto;
+}
+
+.app-admin .sidebar__grupo-titulo {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 237, 216, 0.45);
+  padding: 0.75rem 0.75rem 0.4rem;
+}
+
+.app-admin .sidebar__enlace {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radio-m);
+  font-size: 0.92rem;
+  color: rgba(245, 237, 216, 0.78);
+  transition: background var(--transicion), color var(--transicion);
+}
+
+.app-admin .sidebar__enlace svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+.app-admin .sidebar__enlace:hover {
+  background: rgba(245, 237, 216, 0.08);
+  color: var(--crema-clara);
+}
+
+.app-admin .sidebar__enlace[aria-current="page"] {
+  background: var(--naranja);
+  color: var(--crema-clara);
+  font-weight: 600;
+}
+
+.app-admin .sidebar__pie {
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(245, 237, 216, 0.12);
+}
+
+.app-admin .sidebar__salir {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--rojo);
+  padding: 0.5rem 0.25rem;
+}
+
+.app-admin .sidebar__salir svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+}
+
+.app-admin .btn-menu-movil {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-m);
+}
+
+.app-admin .btn-menu-movil svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--negro-suave);
+}
+
+.app-admin .sidebar__cerrar {
+  display: none;
+}
+
+.app-admin .overlay-sidebar {
+  display: none;
+}
+
+/* ---------- CONTENIDO PRINCIPAL ---------- */
+
+.app-admin .contenido {
+  margin-left: var(--ancho-sidebar);
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-admin .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 2rem;
+  background: var(--crema-clara);
+  border-bottom: 1px solid var(--gris-borde);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.app-admin .topbar__titulos {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.app-admin .topbar__titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--negro-suave);
+}
+
+.app-admin .topbar__subtitulo {
+  font-size: 0.85rem;
+  color: var(--gris-texto);
+  margin-top: 0.15rem;
+}
+
+.app-admin .topbar__usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.app-admin .avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--naranja-suave);
+  color: var(--negro-suave);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: var(--fuente-titulo);
+}
+
+.app-admin .principal {
+  padding: 2rem;
+  flex: 1;
+}
+
+/* ---------- ELEMENTO DE FIRMA: TARJETA "RECIBO" ---------- */
+
+.app-admin .tarjeta {
+  background: var(--blanco);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-card);
+  border: 1px solid var(--gris-borde);
+  overflow: hidden;
+}
+
+.app-admin .tarjeta__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.5rem;
+  background: var(--crema-clara);
+  background-image: radial-gradient(circle at 10px 100%, transparent 5px, var(--crema-clara) 5.5px);
+  background-size: 20px 100%;
+  background-position: bottom;
+  border-bottom: 2px dashed var(--gris-borde);
+}
+
+.app-admin .tarjeta__encabezado-titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.app-admin .tarjeta__cuerpo {
+  padding: 1.5rem;
+}
+
+/* ---------- CUADRÍCULA DE ESTADÍSTICAS ---------- */
+
+.app-admin .grid-estadisticas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.1rem;
+  margin-bottom: 1.75rem;
+}
+
+.app-admin .tarjeta-stat {
+  background: var(--blanco);
+  border: 1px solid var(--gris-borde);
+  border-radius: var(--radio-l);
+  padding: 1.25rem 1.4rem;
+  box-shadow: var(--sombra-card);
+  position: relative;
+}
+
+.app-admin .tarjeta-stat__etiqueta {
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.app-admin .tarjeta-stat__valor {
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--negro-suave);
+}
+
+.app-admin .tarjeta-stat__nota {
+  font-size: 0.78rem;
+  color: var(--exito);
+  margin-top: 0.35rem;
+}
+
+.app-admin .tarjeta-stat__nota.negativo {
+  color: var(--rojo);
+}
+
+.app-admin .tarjeta-stat--acento {
+  border-color: var(--naranja);
+  border-width: 2px;
+}
+
+/* ---------- BOTONES (aislados: .app-admin .btn-primario ≠ tu .btn-primario global) ---------- */
+
+.app-admin .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radio-m);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background var(--transicion), color var(--transicion), border-color var(--transicion);
+  white-space: nowrap;
+}
+
+.app-admin .btn svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+}
+
+.app-admin .btn-primario {
+  background: var(--naranja);
+  color: var(--crema-clara);
+}
+
+.app-admin .btn-primario:hover {
+  background: var(--naranja-oscuro);
+}
+
+.app-admin .btn-secundario {
+  background: var(--blanco);
+  color: var(--negro-suave);
+  border: 1px solid var(--gris-borde);
+}
+
+.app-admin .btn-secundario:hover {
+  border-color: var(--naranja);
+  color: var(--naranja);
+}
+
+.app-admin .btn-peligro {
+  background: var(--blanco);
+  color: var(--rojo);
+  border: 1px solid var(--peligro-fondo);
+}
+
+.app-admin .btn-peligro:hover {
+  background: var(--rojo);
+  color: var(--crema-clara);
+}
+
+.app-admin .btn-icono {
+  padding: 0.5rem;
+  border-radius: var(--radio-m);
+  color: var(--gris-texto);
+}
+
+.app-admin .btn-icono svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.app-admin .btn-icono:hover {
+  background: var(--crema);
+  color: var(--negro-suave);
+}
+
+.app-admin .btn-sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+/* ---------- BARRA DE HERRAMIENTAS DE SECCIÓN ---------- */
+
+.app-admin .barra-herramientas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.app-admin .barra-herramientas__filtros {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.app-admin .campo-busqueda {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--blanco);
+  border: 1px solid var(--gris-borde);
+  border-radius: var(--radio-m);
+  padding: 0.55rem 0.85rem;
+  min-width: 220px;
+}
+
+.app-admin .campo-busqueda svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--gris-texto);
+  flex-shrink: 0;
+}
+
+.app-admin .campo-busqueda input {
+  border: none;
+  background: none;
+  width: 100%;
+  font-size: 0.88rem;
+}
+
+.app-admin .campo-busqueda input:focus-visible {
+  outline: none;
+}
+
+.app-admin .select-filtro {
+  background: var(--blanco);
+  border: 1px solid var(--gris-borde);
+  border-radius: var(--radio-m);
+  padding: 0.55rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--negro-suave);
+}
+
+/* Pestañas (usadas en Reportes) */
+
+.app-admin .pestanas {
+  display: flex;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--gris-borde);
+  margin-bottom: 1.5rem;
+}
+
+.app-admin .pestana {
+  padding: 0.7rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--gris-texto);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color var(--transicion), border-color var(--transicion);
+}
+
+.app-admin .pestana:hover {
+  color: var(--negro-suave);
+}
+
+/* ---------- TABLAS ---------- */
+
+.app-admin .tabla-envoltorio {
+  overflow-x: auto;
+}
+
+.app-admin .tabla {
+  width: 100%;
+  font-size: 0.88rem;
+}
+
+.app-admin .tabla thead th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gris-texto);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--gris-borde);
+  white-space: nowrap;
+}
+
+.app-admin .tabla tbody td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--crema);
+  vertical-align: middle;
+}
+
+.app-admin .tabla tbody tr:hover {
+  background: var(--crema-clara);
+}
+
+.app-admin .tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.app-admin .tabla__acciones {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.app-admin .celda-producto {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.app-admin .celda-producto__miniatura {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-m);
+  background: var(--crema);
+  border: 1px solid var(--gris-borde);
+  flex-shrink: 0;
+}
+
+.app-admin .celda-producto__nombre {
+  font-weight: 600;
+  color: var(--negro-suave);
+}
+
+.app-admin .celda-producto__categoria {
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+}
+
+/* ---------- INSIGNIAS DE ESTADO ---------- */
+
+.app-admin .insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.app-admin .insignia::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.app-admin .insignia--exito {
+  background: var(--exito-fondo);
+  color: var(--exito);
+}
+
+.app-admin .insignia--alerta {
+  background: var(--alerta-fondo);
+  color: var(--alerta);
+}
+
+.app-admin .insignia--peligro {
+  background: var(--peligro-fondo);
+  color: var(--rojo);
+}
+
+.app-admin .insignia--neutro {
+  background: var(--crema);
+  color: var(--gris-texto);
+}
+
+/* ---------- ESTADO VACÍO ---------- */
+
+.app-admin .estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3.5rem 2rem;
+  gap: 0.9rem;
+}
+
+.app-admin .estado-vacio__icono {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--crema);
+  display: grid;
+  place-items: center;
+  color: var(--naranja);
+}
+
+.app-admin .estado-vacio__icono svg {
+  width: 30px;
+  height: 30px;
+  stroke: currentColor;
+}
+
+.app-admin .estado-vacio__titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--negro-suave);
+}
+
+.app-admin .estado-vacio__texto {
+  font-size: 0.88rem;
+  color: var(--gris-texto);
+  max-width: 360px;
+}
+
+/* ---------- FORMULARIOS (dentro de modales) ---------- */
+
+.app-admin .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.app-admin .form-grid--simple {
+  grid-template-columns: 1fr;
+}
+
+.app-admin .campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.app-admin .campo--ancho-completo {
+  grid-column: 1 / -1;
+}
+
+.app-admin .campo label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--negro-suave);
+}
+
+.app-admin .campo .ayuda {
+  font-size: 0.75rem;
+  color: var(--gris-texto);
+  font-weight: 400;
+}
+
+.app-admin .campo input,
+.app-admin .campo select,
+.app-admin .campo textarea {
+  border: 1px solid var(--gris-borde);
+  border-radius: var(--radio-m);
+  padding: 0.6rem 0.75rem;
+  font-size: 0.88rem;
+  background: var(--blanco);
+  transition: border-color var(--transicion);
+}
+
+.app-admin .campo input:focus,
+.app-admin .campo select:focus,
+.app-admin .campo textarea:focus {
+  border-color: var(--naranja);
+}
+
+.app-admin .campo textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.app-admin .campo-check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+}
+
+.app-admin .campo-check input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--naranja);
+}
+
+/* ---------- INTERRUPTOR ---------- */
+
+.app-admin .interruptor {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.app-admin .interruptor input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.app-admin .interruptor__riel {
+  position: absolute;
+  inset: 0;
+  background: var(--gris-borde);
+  border-radius: 999px;
+  transition: background var(--transicion);
+}
+
+.app-admin .interruptor__riel::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 3px;
+  background: var(--blanco);
+  border-radius: 50%;
+  transition: transform var(--transicion);
+}
+
+.app-admin .interruptor input:checked + .interruptor__riel {
+  background: var(--exito);
+}
+
+.app-admin .interruptor input:checked + .interruptor__riel::before {
+  transform: translateX(18px);
+}
+
+.app-admin .interruptor input:focus-visible + .interruptor__riel {
+  outline: 3px solid var(--naranja);
+  outline-offset: 2px;
+}
+
+/* ---------- MODAL ---------- */
+
+.app-admin .fondo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(36, 31, 26, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+}
+
+.app-admin .fondo-modal.visible {
+  display: flex;
+}
+
+.app-admin .modal {
+  background: var(--crema-clara);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-modal);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: aparecer-modal 0.2s ease;
+}
+
+@keyframes aparecer-modal {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.app-admin .modal__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--gris-borde);
+}
+
+.app-admin .modal__titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.app-admin .modal__cuerpo {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.app-admin .modal__pie {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  padding: 1.1rem 1.5rem;
+  border-top: 1px solid var(--gris-borde);
+}
+
+/* ---------- ALERTA DE STOCK BAJO (Inventario) ---------- */
+
+.app-admin .alerta-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radio-l);
+  background: var(--alerta-fondo);
+  border: 1px solid rgba(184, 134, 11, 0.35);
+  margin-bottom: 1.5rem;
+}
+
+.app-admin .alerta-banner svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--alerta);
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.app-admin .alerta-banner__titulo {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--alerta);
+}
+
+.app-admin .alerta-banner__texto {
+  font-size: 0.83rem;
+  color: var(--alerta);
+  margin-top: 0.2rem;
+}
+
+/* ---------- BARRA DE PROGRESO DE STOCK ---------- */
+
+.app-admin .barra-stock {
+  width: 90px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--crema);
+  overflow: hidden;
+}
+
+.app-admin .barra-stock__relleno {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--exito);
+}
+
+.app-admin .barra-stock__relleno.bajo {
+  background: var(--rojo);
+}
+
+.app-admin .barra-stock__relleno.medio {
+  background: var(--alerta);
+}
+
+/* ---------- PAGINACIÓN ---------- */
+
+.app-admin .paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.5rem;
+  border-top: 1px solid var(--gris-borde);
+  font-size: 0.82rem;
+  color: var(--gris-texto);
+}
+
+.app-admin .paginacion__botones {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.app-admin .paginacion__boton {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radio-m);
+  border: 1px solid var(--gris-borde);
+  font-size: 0.82rem;
+}
+
+.app-admin .paginacion__boton[aria-current="page"] {
+  background: var(--naranja);
+  border-color: var(--naranja);
+  color: var(--crema-clara);
+  font-weight: 700;
+}
+
+.app-admin .paginacion__boton:hover:not([aria-current="page"]) {
+  border-color: var(--naranja);
+  color: var(--naranja);
+}
+
+/* ---------- REPORTES: filtros + resultado ---------- */
+
+.app-admin .rejilla-reporte {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.app-admin .panel-filtros-reporte {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.app-admin .panel-filtros-reporte__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.app-admin .panel-filtros-reporte__titulo {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gris-texto);
+  font-weight: 700;
+}
+
+.app-admin .opcion-formato {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--gris-borde);
+  border-radius: var(--radio-m);
+}
+
+.app-admin .opcion-formato input {
+  accent-color: var(--naranja);
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1024px) {
+  .app-admin .rejilla-reporte {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-admin .sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--sombra-modal);
+  }
+
+  .app-admin .sidebar.abierta {
+    transform: translateX(0);
+  }
+
+  .app-admin .sidebar__cerrar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 1.25rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--crema-clara);
+  }
+
+  .app-admin .sidebar__cerrar svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+  }
+
+  .app-admin .contenido {
+    margin-left: 0;
+  }
+
+  .app-admin .btn-menu-movil {
+    display: grid;
+  }
+
+  .app-admin .overlay-sidebar {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 30;
+  }
+
+  .app-admin .overlay-sidebar.activo {
+    display: block;
+  }
+
+  .app-admin .topbar {
+    padding: 1rem 1.25rem;
+  }
+
+  .app-admin .principal {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-admin .topbar__titulo {
+    font-size: 1.2rem;
+  }
+
+  .app-admin .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-admin .grid-estadisticas {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .app-admin .barra-herramientas {
+    align-items: stretch;
+  }
+
+  .app-admin .barra-herramientas__filtros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-admin .campo-busqueda {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .app-admin .grid-estadisticas {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- SIDEBAR COLAPSABLE (escritorio) — controlado por admin.js real ---------- */
+
+.app-shell.sidebar-colapsada .sidebar {
+  width: var(--ancho-sidebar-colapsado);
+}
+
+.app-shell.sidebar-colapsada .contenido {
+  margin-left: var(--ancho-sidebar-colapsado);
+}
+
+.app-shell.sidebar-colapsada .sidebar__nombre,
+.app-shell.sidebar-colapsada .sidebar__rol,
+.app-shell.sidebar-colapsada .sidebar__grupo-titulo {
+  display: none;
+}
+
+.app-admin .contenido {
+  transition: margin-left var(--transicion);
+}
+
+/* El botón hamburguesa ahora sirve en escritorio (colapsar) y en móvil (abrir) */
+.app-admin .btn-menu-movil {
+  display: flex;
+}
+
+/* Sidebar móvil: el JS agrega/quita "sidebar-abierta" sobre .app-shell, no sobre .sidebar */
+@media (max-width: 900px) {
+  .app-shell .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .app-shell.sidebar-abierta .sidebar {
+    transform: translateX(0);
+  }
+
+  .app-shell.sidebar-abierta .overlay-sidebar {
+    display: block;
+  }
+}
+
+/* ---------- PESTAÑAS: mostrar/ocultar paneles solo con CSS, sin tocar admin.js ---------- */
+
+.app-admin [data-panel-pestana] {
+  display: none;
+}
+
+.app-admin .principal:has(.pestana[aria-controls="panel-productos"].activa) #panel-productos,
+.app-admin .principal:has(.pestana[aria-controls="panel-categorias"].activa) #panel-categorias,
+.app-admin .principal:has(.pestana[aria-controls="panel-ventas"].activa) #panel-ventas,
+.app-admin .principal:has(.pestana[aria-controls="panel-productos-top"].activa) #panel-productos-top,
+.app-admin .principal:has(.pestana[aria-controls="panel-caja"].activa) #panel-caja {
+  display: block;
+}
+
+.app-admin .pestana.activa {
+  color: var(--naranja);
+  border-color: var(--naranja);
+}
+.app-shell.sidebar-colapsada .sidebar__enlace-texto {
+  display: none;
+}
+
+.app-shell.sidebar-colapsada .sidebar__enlace {
+  justify-content: center;
+}
+
+.app-shell.sidebar-colapsada .sidebar__logo {
+  width: 48px;
+  height: 48px;
+  max-width: none;
+}
+
+.btn-expandir {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  vertical-align: middle;
+  transition: transform 0.15s ease;
+}
+
+.btn-expandir svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+.btn-expandir--abierto {
+  transform: rotate(90deg);
+}
+
+.celda-acordeon {
+  background: var(--color-crema, #F5EDD8);
+  padding: 0.75rem 1.5rem;
+}
+
+.lista-productos-acordeon {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.texto-atenuado {
+  color: #888;
+  font-style: italic;
+  margin: 0;
+}

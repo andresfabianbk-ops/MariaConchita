@@ -1,0 +1,57 @@
+/* Registro de empleado: formulario más ancho con campos en grid de 2 columnas */
+.registro-form {
+  width: 640px;
+}
+
+.registro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-ancho {
+  grid-column: 1 / -1;
+}
+
+/* Campos más grandes en el registro */
+.registro-form input,
+.registro-form select {
+  background-color: var(--crema);
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.registro-form input:focus,
+.registro-form select:focus {
+  outline: none;
+  border-color: var(--naranja);
+  box-shadow: 0 0 0 3px rgba(196,97,42,0.2);
+}
+
+/* Campo de contraseña con ícono de mostrar/ocultar */
+.campo-contrasena {
+  position: relative;
+}
+
+.campo-contrasena input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.icono-ojo {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}

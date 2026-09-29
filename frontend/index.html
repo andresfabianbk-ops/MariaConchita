@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mariaconchita - Iniciar sesión</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+<!-- Barra de navegación -->
+<nav class="navbar">
+  <img src="img/logo.png" alt="Mariaconchita" class="navbar-logo">
+  <ul class="navbar-menu">
+    <li><a href="../frontend/index.html">Inicio</a></li>
+    <li><a href="#">Menú</a></li>
+    <li><a href="#">Ayuda</a></li>
+  </ul>
+</nav>
+
+  <!-- Formulario de login -->
+  <main class="login-container">
+    <form id="form-login" class="login-form">
+      <h1>Iniciar sesión</h1>
+
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" name="correo" required>
+
+      <label for="contrasena">Contraseña</label>
+      <input type="password" id="contrasena" name="contrasena" required>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="recordar" name="recordar">
+        <label for="recordar">Recordar sesión</label>
+      </div>
+
+      <button type="submit" class="btn-primario">Ingresar</button>
+      <button type="reset" class="btn-secundario">Cancelar</button>
+
+      <a href="#" class="link-recuperar">¿Olvidaste tu contraseña?</a>
+    </form>
+  </main>
+
+  <script src="js/comun.js"></script>
+  <script src="js/login.js"></script>
+  <!-- Footer -->
+<footer class="footer">
+  <p>&copy; 2026 Mariaconchita - Comidas Rápidas. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>

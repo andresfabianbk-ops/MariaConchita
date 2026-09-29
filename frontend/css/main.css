@@ -1,0 +1,19 @@
+/* Punto de entrada único de estilos - Mariaconchita
+   Cada página HTML solo enlaza este archivo, nunca las hojas individuales */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@import url('variables.css');
+@import url('base/reset.css');
+@import url('base/animaciones.css');
+
+@import url('componentes/navbar.css');
+@import url('componentes/botones.css');
+@import url('componentes/footer.css');
+
+@import url('vistas/login.css');
+@import url('vistas/pedidos.css');
+@import url('vistas/cocina.css');
+@import url('vistas/registro.css');
+@import url('vistas/factura.css');
+@import url('vistas/admin.css');

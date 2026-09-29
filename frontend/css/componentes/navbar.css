@@ -1,0 +1,58 @@
+/* Contenedor de la barra: logo arriba, menú debajo, centrados */
+.navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px 0;
+  margin-bottom: 40px;
+}
+
+/* Logo con animación de flotación */
+.navbar-logo {
+  height: 350px;
+  animation: flotar 5s ease-in-out infinite;
+}
+
+/* Animación de flotación suave del logo */
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Lista de enlaces del menú (Inicio, Menú, Ayuda) */
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 52px;
+}
+
+.navbar-menu a {
+  color: var(--negro);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  position: relative;
+  transition: color 0.2s;
+}
+
+/* Línea animada que aparece debajo del link al pasar el mouse */
+.navbar-menu a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--naranja);
+  transition: width 0.3s;
+}
+
+.navbar-menu a:hover {
+  color: var(--naranja);
+}
+
+.navbar-menu a:hover::after {
+  width: 100%;
+}

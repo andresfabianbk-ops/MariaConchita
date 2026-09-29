@@ -1,0 +1,5 @@
+/* Animación de entrada suave, usada por .login-form y .pedido-form */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

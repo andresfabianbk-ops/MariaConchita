@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administrador — MariaConchita</title>
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+  <div class="app-admin app-shell">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar__cerrar" aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <div class="sidebar__marca">
+        <img class="sidebar__logo" src="../../img/logo.png" alt="Logo MariaConchita">
+        <div>
+          <div class="sidebar__nombre">MariaConchita</div>
+          <div class="sidebar__rol">Administrador</div>
+        </div>
+      </div>  
+      
+      <nav class="sidebar__nav" aria-label="Navegación principal">
+        <div class="sidebar__grupo-titulo">General</div>
+        <a class="sidebar__enlace" href="dashboard.html" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          <span class="sidebar__enlace-texto">Inicio</span>
+        </a>
+
+        <div class="sidebar__grupo-titulo">Operación</div>
+        <a class="sidebar__enlace" href="menu.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+          <span class="sidebar__enlace-texto">Menú digital</span>
+          
+        </a>
+        <a class="sidebar__enlace" href="inventario.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 8-9-5-9 5 9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+          <span class="sidebar__enlace-texto">Inventario</span>
+        </a>
+
+        <div class="sidebar__grupo-titulo">Personal y accesos</div>
+        <a class="sidebar__enlace" href="empleados.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="sidebar__enlace-texto">Gestion de Empleados</span>
+        </a>
+
+        <div class="sidebar__grupo-titulo">Análisis</div>
+        <a class="sidebar__enlace" href="reportes.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span class="sidebar__enlace-texto">Reportes</span>
+        </a>
+      </nav>
+
+      <div class="sidebar__pie">
+        <a class="sidebar__salir" href="../pages/login.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span class="sidebar__enlace-texto">Cerrar sesión</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="overlay-sidebar"></div>
+
+    <!-- ===== CONTENIDO ===== -->
+    <div class="contenido">
+      <header class="topbar">
+        <div class="topbar__titulos">
+          <button class="btn-menu-movil" data-accion="toggle-sidebar" aria-label="Abrir o colapsar menú" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1 class="topbar__titulo">Inicio</h1>
+            <p class="topbar__subtitulo">Resumen general del restaurante</p>
+          </div>
+        </div>
+        <div class="topbar__usuario">
+          <div class="avatar">AC</div>
+        </div>
+      </header>
+
+      <main class="principal">
+
+        <section class="grid-estadisticas" aria-label="Indicadores generales">
+          <div class="tarjeta-stat tarjeta-stat--acento">
+            <div class="tarjeta-stat__etiqueta">Ventas de hoy</div>
+            <div class="tarjeta-stat__valor">—</div>
+            <div class="tarjeta-stat__nota">Se calcula desde Pagos</div>
+          </div>
+          <div class="tarjeta-stat">
+            <div class="tarjeta-stat__etiqueta">Pedidos activos</div>
+            <div class="tarjeta-stat__valor">—</div>
+            <div class="tarjeta-stat__nota">En mesa y a domicilio</div>
+          </div>
+          <div class="tarjeta-stat">
+            <div class="tarjeta-stat__etiqueta">Insumos en alerta</div>
+            <div class="tarjeta-stat__valor">—</div>
+            <div class="tarjeta-stat__nota negativo">Bajo stock mínimo</div>
+          </div>
+          <div class="tarjeta-stat">
+            <div class="tarjeta-stat__etiqueta">Empleados activos</div>
+            <div class="tarjeta-stat__valor">—</div>
+            <div class="tarjeta-stat__nota">Con turno vigente</div>
+          </div>
+        </section>
+
+        <div class="tarjeta">
+          <div class="tarjeta__encabezado">
+            <h2 class="tarjeta__encabezado-titulo">Accesos rápidos</h2>
+          </div>
+          <div class="tarjeta__cuerpo">
+            <div class="grid-estadisticas" style="margin-bottom:0;">
+              <a class="tarjeta-stat" href="menu.html" style="display:block;">
+                <div class="tarjeta-stat__etiqueta">Gestionar</div>
+                <div class="celda-producto__nombre" style="font-family:var(--fuente-titulo); font-size:1.05rem;">Menú digital</div>
+              </a>
+              <a class="tarjeta-stat" href="inventario.html" style="display:block;">
+                <div class="tarjeta-stat__etiqueta">Controlar</div>
+                <div class="celda-producto__nombre" style="font-family:var(--fuente-titulo); font-size:1.05rem;">Inventario</div>
+              </a>
+              <a class="tarjeta-stat" href="empleados.html" style="display:block;">
+                <div class="tarjeta-stat__etiqueta">Administrar</div>
+                <div class="celda-producto__nombre" style="font-family:var(--fuente-titulo); font-size:1.05rem;">Gestion de Empleados</div>
+              </a>
+              <a class="tarjeta-stat" href="reportes.html" style="display:block;">
+                <div class="tarjeta-stat__etiqueta">Generar</div>
+                <div class="celda-producto__nombre" style="font-family:var(--fuente-titulo); font-size:1.05rem;">Reportes</div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="../../js/admin.js"></script>
+</body>
+</html>

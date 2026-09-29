@@ -1,0 +1,218 @@
+/* Esta hoja es compartida por pedidos.html (Cajero - domicilio) y caja.html,
+   ambas páginas reutilizan la misma tarjeta de formulario (.pedido-form) */
+
+/* Centra la tarjeta del formulario en la pantalla */
+.pedido-container {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 80px;
+}
+
+/* Tarjeta contenedora del formulario (pedidos y caja) */
+.pedido-form {
+  background-color: #FBF7ED;
+  padding: 36px;
+  border-radius: 25px;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.45);
+  border-top: 4px solid var(--naranja);
+  animation: aparecer 0.6s ease-out;
+}
+
+.pedido-form h1 {
+  text-align: center;
+  color: var(--negro);
+  font-size: 24px;
+}
+
+/* Subtítulos de sección dentro del formulario (ej: "Productos disponibles") */
+.pedido-form h2 {
+  color: var(--naranja);
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+/* Campos de texto: nombre del cliente, teléfono (pedidos.html) */
+.pedido-form input[type="text"],
+.pedido-form input[type="tel"],
+.pedido-form input[type="number"] {
+  background-color: var(--crema);
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.pedido-form input:focus {
+  outline: none;
+  border-color: var(--naranja);
+  box-shadow: 0 0 0 3px rgba(196,97,42,0.2);
+}
+
+/* Selects: mesa/método de pago (pedidos.html y caja.html) */
+.pedido-form select {
+  background-color: var(--crema);
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Tarjeta individual de cada producto con botón "+" */
+.producto-card {
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.2s;
+}
+
+.producto-card:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.producto-card button {
+  background-color: var(--naranja);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+
+/* --- pedidos.html: resumen del pedido / caja.html: movimientos de caja --- */
+.resumen-pedido {
+  list-style: none;
+  background-color: white;
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 60px;
+}
+
+.resumen-pedido li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  align-items: center;
+}
+
+/* Botón "✕" para eliminar un producto del resumen (pedidos.html) */
+.btn-eliminar {
+  background-color: transparent;
+  border: none;
+  color: var(--rojo);
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* --- caja.html: separación visual entre productos y totales del detalle de pedido --- */
+.detalle-productos {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.detalle-productos li {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.detalle-totales {
+  list-style: none;
+  border-top: 2px solid #eee;
+  padding-top: 8px;
+}
+
+.detalle-totales li {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.detalle-total-final {
+  border-top: 1px solid #ddd;
+  margin-top: 6px;
+  padding-top: 8px;
+  font-size: 16px;
+  color: var(--naranja);
+}
+
+/* Agrupación del menú por categoría */
+.categoria-menu {
+  margin-bottom: 20px;
+}
+
+.categoria-titulo {
+  color: var(--naranja);
+  font-size: 15px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+
+.categoria-productos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* Modal de personalización de producto (reutiliza .modal-overlay de factura.css) */
+.tarjeta-personalizar {
+  background-color: white;
+  width: 320px;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.tarjeta-personalizar h3 {
+  color: var(--naranja);
+  margin-bottom: 6px;
+}
+
+.personalizar-instruccion {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.ingrediente-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.personalizar-acciones {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.personalizar-acciones button {
+  flex: 1;
+  width: auto;
+}
+
+/* Observación de ingredientes quitados en el resumen del pedido */
+.observacion-item {
+  color: var(--rojo);
+  font-style: italic;
+}

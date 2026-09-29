@@ -1,0 +1,69 @@
+/* Contenedor general de la vista de cocina */
+.cocina-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 80px 20px;
+}
+
+.cocina-container h1 {
+  text-align: center;
+  color: var(--negro);
+  margin-bottom: 24px;
+}
+
+/* Lista vertical de pedidos, uno debajo del otro en orden de llegada */
+.lista-cocina {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Tarjeta individual de cada pedido en cocina */
+.pedido-cocina-card {
+  background-color: #FBF7ED;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  border-top: 4px solid var(--naranja);
+}
+
+.pedido-cocina-card h3 {
+  color: var(--naranja);
+  margin-bottom: 10px;
+}
+
+.pedido-cocina-card ul {
+  list-style: none;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* Etiqueta de estado (Pendiente / En preparación / Listo) */
+.pedido-cocina-card .estado {
+  font-weight: bold;
+  margin-bottom: 12px;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.estado-pendiente { background-color: #eee; color: var(--negro); }
+.estado-preparacion { background-color: #ffe0b2; color: #a84d20; }
+.estado-listo { background-color: #c8e6c9; color: #256029; }
+
+/* Botones grandes pensados para pantalla táctil */
+.pedido-cocina-card button {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  margin-top: 8px;
+}
+
+.btn-preparacion { background-color: var(--naranja); }
+.btn-listo { background-color: #2e7d32; }

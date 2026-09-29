@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú digital — Panel de Administrador MariaConchita</title>
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+  <div class="app-admin app-shell">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar__cerrar" aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <div class="sidebar__marca">
+        <img class="sidebar__logo" src="../../img/logo.png" alt="Logo MariaConchita">
+        <div>
+          <div class="sidebar__nombre">MariaConchita</div>
+          <div class="sidebar__rol">Administrador</div>
+        </div>
+      </div>
+
+      <nav class="sidebar__nav" aria-label="Navegación principal">
+        <div class="sidebar__grupo-titulo">General</div>
+        <a class="sidebar__enlace" href="dashboard.html">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          <span class="sidebar__enlace-texto">Inicio</span>
+        </a>
+
+        <div class="sidebar__grupo-titulo">Operación</div>
+        <a class="sidebar__enlace" href="menu.html" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+          <span class="sidebar__enlace-texto">Menú digital</span>
+          
+        </a>
+        <a class="sidebar__enlace" href="inventario.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 8-9-5-9 5 9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+          <span class="sidebar__enlace-texto">Inventario</span>
+        </a>
+
+        <div class="sidebar__grupo-titulo">Personal y accesos</div>
+        <a class="sidebar__enlace" href="empleados.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="sidebar__enlace-texto">Gestion de Empleados</span>
+        </a>
+
+        <div class="sidebar__grupo-titulo">Análisis</div>
+        <a class="sidebar__enlace" href="reportes.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span class="sidebar__enlace-texto">Reportes</span>
+        </a>
+      </nav>
+
+      <div class="sidebar__pie">
+        <a class="sidebar__salir" href="../pages/login.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span class="sidebar__enlace-texto">Cerrar sesión</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="overlay-sidebar"></div>
+
+    <!-- ===== CONTENIDO ===== -->
+    <div class="contenido">
+      <header class="topbar">
+        <div class="topbar__titulos">
+          <button class="btn-menu-movil" data-accion="toggle-sidebar" aria-label="Abrir o colapsar menú" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1 class="topbar__titulo">Menú digital</h1>
+            <p class="topbar__subtitulo">Productos y categorías disponibles para pedidos</p>
+          </div>
+        </div>
+        <div class="topbar__usuario">
+          <div class="avatar">AC</div>
+        </div>
+      </header>
+
+      <main class="principal">
+
+        <!-- Pestañas: Productos / Categorías -->
+        <div class="pestanas" role="tablist" aria-label="Secciones del menú">
+          <button class="pestana activa" role="tab" aria-selected="true" aria-controls="panel-productos">Productos</button>
+          <button class="pestana" role="tab" aria-selected="false" aria-controls="panel-categorias">Categorías</button>
+        </div>
+
+        <!-- ===== PANEL: PRODUCTOS ===== -->
+        <section id="panel-productos" data-panel-pestana>
+          <div class="barra-herramientas">
+            <div class="barra-herramientas__filtros">
+              <div class="campo-busqueda">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="search" id="buscar-producto" placeholder="Buscar producto...">
+              </div>
+              <select class="select-filtro" id="filtro-categoria-producto" aria-label="Filtrar por categoría">
+                <option value="">Todas las categorías</option>
+              </select>
+              <select class="select-filtro" id="filtro-disponible-producto" aria-label="Filtrar por disponibilidad">
+                <option value="">Disponibilidad: todas</option>
+                <option value="1">Disponibles</option>
+                <option value="0">No disponibles</option>
+              </select>
+            </div>
+            <button class="btn btn-primario" data-abrir-modal="modal-producto">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Agregar producto
+            </button>
+          </div>
+
+          <div class="tarjeta">
+            <!-- Estado vacío: sin datos conectados en esta entrega de diseño -->
+            <div class="estado-vacio">
+              <div class="estado-vacio__icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5"/></svg>
+              </div>
+              <h2 class="estado-vacio__titulo">Aún no hay productos registrados</h2>
+              <p class="estado-vacio__texto">Los productos que agregues aparecerán aquí, organizados por categoría, listos para mostrarse en Mesero, Cajero y Cocina.</p>
+              <button class="btn btn-primario" data-abrir-modal="modal-producto">Agregar el primer producto</button>
+            </div>
+
+            <!-- Referencia de diseño: así se vería la tabla poblada (estructura, no datos) -->
+            <div class="tabla-envoltorio">
+              <table class="tabla" aria-hidden="true">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Disponible</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="celda-producto">
+                        <div class="celda-producto__miniatura"></div>
+                        <div>
+                          <div class="celda-producto__nombre">Nombre del producto</div>
+                          <div class="celda-producto__categoria">Categoría</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>$ 0.000</td>
+                    <td>
+                      <label class="interruptor">
+                        <input type="checkbox" checked>
+                        <span class="interruptor__riel"></span>
+                      </label>
+                    </td>
+                    <td>
+                      <div class="tabla__acciones">
+                        <button class="btn-icono" data-abrir-modal="modal-producto" aria-label="Editar producto">
+                          <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                        </button>
+                        <button class="btn-icono" data-abrir-modal="modal-eliminar" aria-label="Eliminar producto">
+                          <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== PANEL: CATEGORÍAS ===== -->
+        <section id="panel-categorias" data-panel-pestana hidden>
+          <div class="barra-herramientas">
+            <button class="btn btn-primario" data-abrir-modal="modal-categoria">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Agregar categoría
+            </button>
+          </div>
+
+          <div class="tarjeta">
+            <div class="estado-vacio">
+              <div class="estado-vacio__icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              </div>
+              <h2 class="estado-vacio__titulo">Aún no hay categorías registradas</h2>
+              <p class="estado-vacio__texto">Las categorías agrupan los productos del menú digital (ej. Arepas, Hamburguesas, Salchipapas).</p>
+              <button class="btn btn-primario" data-abrir-modal="modal-categoria">Agregar la primera categoría</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  
+
+  <!-- ===== MODAL: AGREGAR / EDITAR PRODUCTO ===== -->
+  <div class="fondo-modal" id="modal-producto">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-producto">
+      <div class="modal__encabezado">
+        <h2 class="modal__titulo" id="titulo-modal-producto">Agregar producto</h2>
+        <button class="btn-icono" data-cerrar-modal aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form class="form-grid" id="form-producto" onsubmit="return false;">
+        <div class="modal__cuerpo">
+          <div class="campo campo--ancho-completo">
+            <label for="prod-nombre">Nombre del producto</label>
+            <input type="text" id="prod-nombre" placeholder="Ej. Hamburguesa Clásica">
+          </div>
+          <div class="campo">
+            <label for="prod-categoria">Categoría</label>
+            <select id="prod-categoria">
+              <option>Arepas</option>
+              <option>Hamburguesas</option>
+              <option>Mazorcadas</option>
+              <option>Perros calientes</option>
+              <option>Salchipapas</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="prod-precio">Precio (COP)</label>
+            <input type="number" id="prod-precio" placeholder="0">
+          </div>
+          <div class="campo campo--ancho-completo">
+            <label for="prod-descripcion">Descripción <span class="ayuda">(opcional)</span></label>
+            <textarea id="prod-descripcion" placeholder="Breve descripción para el menú digital"></textarea>
+          </div>
+          <div class="campo campo--ancho-completo">
+            <div class="campo-check">
+              <input type="checkbox" id="prod-disponible" checked>
+              <label for="prod-disponible" style="font-weight:400;">Producto disponible para pedidos</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal__pie">
+          <button type="button" class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
+          <button type="submit" class="btn btn-primario">Guardar producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <!-- ===== MODAL: AGREGAR CATEGORÍA ===== -->
+  <div class="fondo-modal" id="modal-categoria">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-categoria">
+      <div class="modal__encabezado">
+        <h2 class="modal__titulo" id="titulo-modal-categoria">Agregar categoría</h2>
+        <button class="btn-icono" data-cerrar-modal aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form class="form-grid form-grid--simple" onsubmit="return false;">
+        <div class="modal__cuerpo">
+          <div class="campo">
+            <label for="cat-nombre">Nombre de la categoría</label>
+            <input type="text" id="cat-nombre" placeholder="Ej. Salchipapas">
+          </div>
+        </div>
+        <div class="modal__pie">
+          <button type="button" class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
+          <button type="submit" class="btn btn-primario">Guardar categoría</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+
+  <!-- ===== MODAL: CONFIRMAR ELIMINACIÓN ===== -->
+  <div class="fondo-modal" id="modal-eliminar">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-eliminar" style="max-width:420px;">
+      <div class="modal__encabezado">
+        <h2 class="modal__titulo" id="titulo-modal-eliminar">Eliminar producto</h2>
+        <button class="btn-icono" data-cerrar-modal aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal__cuerpo">
+        <p style="font-size:0.9rem;">¿Seguro que deseas eliminar <strong data-nombre-a-eliminar>este producto</strong> del menú digital? Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal__pie">
+        <button class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
+        <button class="btn btn-peligro" data-cerrar-modal>Eliminar</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+  <script src="../../js/admin.js"></script>
+</body>
+</html>

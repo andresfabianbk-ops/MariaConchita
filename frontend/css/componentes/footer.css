@@ -1,0 +1,12 @@
+/* Footer con derechos reservados - aparece en todas las páginas */
+.footer {
+  background-color: var(--negro);
+  color: var(--crema);
+  text-align: center;
+  padding: 16px;
+  font-size: 13px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
