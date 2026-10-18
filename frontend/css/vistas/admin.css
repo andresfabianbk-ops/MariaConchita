@@ -643,6 +643,16 @@
   border-color: var(--naranja);
 }
 
+/* Campos bloqueados (solo lectura): gris de la paleta para distinguirlos de los editables */
+.app-admin .campo input:disabled,
+.app-admin .campo select:disabled {
+  background: var(--gris-borde);
+  color: var(--gris-texto);
+  border-color: var(--gris-borde-fuerte);
+  cursor: not-allowed;
+  opacity: 1; /* evita que el navegador los desvanezca */
+}
+
 .app-admin .campo textarea {
   resize: vertical;
   min-height: 80px;

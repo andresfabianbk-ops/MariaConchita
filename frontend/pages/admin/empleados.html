@@ -34,7 +34,6 @@
         <a class="sidebar__enlace" href="menu.html">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
           <span class="sidebar__enlace-texto">Menú digital</span>
-          
         </a>
         <a class="sidebar__enlace" href="inventario.html">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 8-9-5-9 5 9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
@@ -55,7 +54,7 @@
       </nav>
 
       <div class="sidebar__pie">
-        <a class="sidebar__salir" href="../pages/login.html">
+        <a class="sidebar__salir" href="../../index.html" data-cerrar-sesion>
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           <span class="sidebar__enlace-texto">Cerrar sesión</span>
         </a>
@@ -87,81 +86,51 @@
           <div class="barra-herramientas__filtros">
             <div class="campo-busqueda">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="search" placeholder="Buscar por nombre o correo...">
+              <input type="search" id="buscar-empleado" placeholder="Buscar por nombre, documento o correo...">
             </div>
-            <select class="select-filtro" aria-label="Filtrar por rol">
-              <option>Todos los roles</option>
-              <option>Administrador</option>
-              <option>Cajero</option>
-              <option>Cocinero</option>
-              <option>Mesero</option>
+            <select class="select-filtro" id="filtro-rol-empleado" aria-label="Filtrar por rol">
+              <option value="">Todos los roles</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Cajero">Cajero</option>
+              <option value="Cocinero">Cocinero</option>
+              <option value="Mesero">Mesero</option>
             </select>
-            <select class="select-filtro" aria-label="Filtrar por estado">
-              <option>Estado: todos</option>
-              <option>Activo</option>
-              <option>Inactivo</option>
-              <option>Cuenta bloqueada</option>
+            <select class="select-filtro" id="filtro-estado-empleado" aria-label="Filtrar por estado">
+              <option value="">Estado: todos</option>
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
             </select>
           </div>
-          <button class="btn btn-primario" data-abrir-modal="modal-persona">
+          <button class="btn btn-primario" data-abrir-modal="modal-persona" id="btn-agregar-empleado">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Agregar empleado
           </button>
         </div>
 
         <div class="tarjeta" style="margin-bottom: 1.75rem;">
-          <div class="estado-vacio">
+          <!-- Estado vacío: lo muestra/oculta el JS con style.display -->
+          <div class="estado-vacio" id="estado-vacio-empleados">
             <div class="estado-vacio__icono">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <h2 class="estado-vacio__titulo">Aún no hay empleados registrados</h2>
-            <p class="estado-vacio__texto">Cada persona que agregues queda a la vez como empleado (rol y turno) y como usuario con acceso al sistema.</p>
+            <p class="estado-vacio__texto">Cada persona que agregues queda a la vez como empleado (con su rol) y como usuario con acceso al sistema.</p>
             <button class="btn btn-primario" data-abrir-modal="modal-persona">Agregar el primer empleado</button>
           </div>
 
-          <!-- Referencia de diseño: estructura de la tabla poblada -->
-          <div class="tabla-envoltorio">
-            <table class="tabla" aria-hidden="true">
+          <!-- Tabla real: el JS rellena el tbody -->
+          <div class="tabla-envoltorio" id="tabla-empleados" style="display:none;">
+            <table class="tabla">
               <thead>
                 <tr>
                   <th>Empleado</th>
+                  <th>Documento</th>
                   <th>Rol</th>
-                  <th>Turno</th>
-                  <th>Último acceso</th>
                   <th>Estado</th>
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="celda-producto">
-                      <div class="avatar" style="width:36px; height:36px; font-size:0.8rem;">—</div>
-                      <div>
-                        <div class="celda-producto__nombre" data-nombre-registro>Nombre del empleado</div>
-                        <div class="celda-producto__categoria">correo@mariaconchita.com</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Rol asignado</td>
-                  <td>Hora inicio – Hora fin</td>
-                  <td>Fecha y hora</td>
-                  <td><span class="insignia insignia--exito">Activo</span></td>
-                  <td>
-                    <div class="tabla__acciones">
-                      <button class="btn-icono" data-abrir-modal="modal-restablecer" aria-label="Restablecer contraseña">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                      </button>
-                      <button class="btn-icono" data-abrir-modal="modal-persona" aria-label="Editar empleado">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                      </button>
-                      <button class="btn-icono" data-abrir-modal="modal-eliminar" aria-label="Eliminar empleado">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="tbody-empleados"></tbody>
             </table>
           </div>
         </div>
@@ -240,110 +209,103 @@
       </main>
     </div>
 
-    <!-- ===== MODAL: AGREGAR / EDITAR EMPLEADO (fusiona datos de empleado + credenciales de acceso) ===== -->
+    <!-- ===== MODAL: AGREGAR / EDITAR EMPLEADO (datos de empleado + credenciales) ===== -->
     <div class="fondo-modal" id="modal-persona">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-persona">
-        <div class="modal__encabezado">
-          <h2 class="modal__titulo" id="titulo-modal-persona">Agregar empleado</h2>
-          <button class="btn-icono" data-cerrar-modal aria-label="Cerrar">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-        <div class="modal__cuerpo">
-          <form class="form-grid" onsubmit="return false;">
-            <div class="campo campo--ancho-completo">
-              <label for="emp-nombre">Nombre completo</label>
-              <input type="text" id="emp-nombre" placeholder="Ej. Andrés Cárdenas">
-            </div>
-            <div class="campo campo--ancho-completo">
-              <label for="emp-correo">Correo <span class="ayuda">(también es su usuario de acceso)</span></label>
-              <input type="email" id="emp-correo" placeholder="correo@mariaconchita.com">
-            </div>
-            <div class="campo">
-              <label for="emp-rol">Rol</label>
-              <select id="emp-rol">
-                <option>Administrador</option>
-                <option>Cajero</option>
-                <option>Cocinero</option>
-                <option>Mesero</option>
-              </select>
-            </div>
-            <div class="campo">
-              <label for="emp-turno-inicio">Inicio de turno</label>
-              <input type="time" id="emp-turno-inicio">
-            </div>
-            <div class="campo">
-              <label for="emp-turno-fin">Fin de turno</label>
-              <input type="time" id="emp-turno-fin">
-            </div>
-            <div class="campo campo--ancho-completo">
-              <label for="emp-clave">Contraseña temporal</label>
-              <input type="password" id="emp-clave" placeholder="Se solicitará cambiarla al primer ingreso">
-            </div>
-            <div class="campo campo--ancho-completo">
-              <div class="campo-check">
-                <input type="checkbox" id="emp-forzar-cambio" checked>
-                <label for="emp-forzar-cambio" style="font-weight:400;">Exigir cambio de contraseña en el primer inicio de sesión</label>
+        <form id="form-empleado">
+          <div class="modal__encabezado">
+            <h2 class="modal__titulo" id="titulo-modal-persona">Agregar empleado</h2>
+            <button type="button" class="btn-icono" data-cerrar-modal aria-label="Cerrar">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal__cuerpo">
+            <div class="form-grid">
+              <input type="hidden" id="emp-id">
+              <div class="campo">
+                <label for="emp-nombres">Nombres</label>
+                <input type="text" id="emp-nombres" maxlength="50" data-solo-letras placeholder="Ej. Maria">
+              </div>
+              <div class="campo">
+                <label for="emp-apellidos">Apellidos</label>
+                <input type="text" id="emp-apellidos" maxlength="50" data-solo-letras placeholder="Ej. Conchita">
+              </div>
+              <div class="campo">
+                <label for="emp-tipo-documento">Tipo de documento</label>
+                <select id="emp-tipo-documento">
+                  <option value="CC">Cédula de ciudadanía</option>
+                  <option value="TI">Tarjeta de identidad</option>
+                  <option value="PPT">Permiso por protección temporal</option>
+                  <option value="PEP">Permiso especial de permanencia</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="emp-numero-documento">Número de documento</label>
+                <input type="text" id="emp-numero-documento" inputmode="numeric" maxlength="10" data-solo-digitos placeholder="Ej. 1012345678">
+              </div>
+              <div class="campo">
+                <label for="emp-fecha-nacimiento">Fecha de nacimiento</label>
+                <input type="date" id="emp-fecha-nacimiento">
+              </div>
+              <div class="campo">
+                <label for="emp-celular">Celular <span class="ayuda">(opcional)</span></label>
+                <input type="tel" id="emp-celular" inputmode="numeric" maxlength="10" data-solo-digitos placeholder="Ej. 3001234567">
+              </div>
+              <div class="campo campo--ancho-completo">
+                <label for="emp-correo">Correo <span class="ayuda">(también es su usuario de acceso)</span></label>
+                <input type="email" id="emp-correo" placeholder="correo@mariaconchita.com">
+              </div>
+              <div class="campo">
+                <label for="emp-rol">Rol</label>
+                <select id="emp-rol">
+                  <option value="Administrador">Administrador</option>
+                  <option value="Cajero">Cajero</option>
+                  <option value="Cocinero">Cocinero</option>
+                  <option value="Mesero">Mesero</option>
+                </select>
+              </div>
+              <div class="campo" id="campo-clave">
+                <label for="emp-clave">Contraseña</label>
+                <input type="password" id="emp-clave" placeholder="Mínimo 6 caracteres">
               </div>
             </div>
-            <div class="campo campo--ancho-completo">
-              <div class="campo-check">
-                <input type="checkbox" id="emp-activo" checked>
-                <label for="emp-activo" style="font-weight:400;">Empleado activo (puede iniciar sesión)</label>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal__pie">
-          <button class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
-          <button class="btn btn-primario" data-cerrar-modal>Guardar empleado</button>
-        </div>
+          </div>
+          <div class="modal__pie">
+            <button type="button" class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
+            <button type="submit" class="btn btn-primario">Guardar empleado</button>
+          </div>
+        </form>
       </div>
     </div>
 
     <!-- ===== MODAL: RESTABLECER CONTRASEÑA ===== -->
     <div class="fondo-modal" id="modal-restablecer">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-restablecer" style="max-width:440px;">
-        <div class="modal__encabezado">
-          <h2 class="modal__titulo" id="titulo-modal-restablecer">Restablecer contraseña</h2>
-          <button class="btn-icono" data-cerrar-modal aria-label="Cerrar">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-        <div class="modal__cuerpo">
-          <div class="campo">
-            <label for="nueva-clave">Nueva contraseña temporal</label>
-            <input type="password" id="nueva-clave" placeholder="Se le pedirá cambiarla al ingresar">
+        <form id="form-restablecer">
+          <div class="modal__encabezado">
+            <h2 class="modal__titulo" id="titulo-modal-restablecer">Restablecer contraseña</h2>
+            <button type="button" class="btn-icono" data-cerrar-modal aria-label="Cerrar">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
           </div>
-        </div>
-        <div class="modal__pie">
-          <button class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
-          <button class="btn btn-primario" data-cerrar-modal>Restablecer</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== MODAL: CONFIRMAR ELIMINACIÓN ===== -->
-    <div class="fondo-modal" id="modal-eliminar">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-eliminar" style="max-width:420px;">
-        <div class="modal__encabezado">
-          <h2 class="modal__titulo" id="titulo-modal-eliminar">Eliminar empleado</h2>
-          <button class="btn-icono" data-cerrar-modal aria-label="Cerrar">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-        <div class="modal__cuerpo">
-          <p style="font-size:0.9rem;">¿Seguro que deseas eliminar a <strong data-nombre-a-eliminar>este empleado</strong>? Perderá su acceso al sistema y esta acción no se puede deshacer.</p>
-        </div>
-        <div class="modal__pie">
-          <button class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
-          <button class="btn btn-peligro" data-cerrar-modal>Eliminar</button>
-        </div>
+          <div class="modal__cuerpo">
+            <p style="font-size:0.9rem; margin-bottom:1rem;">Nueva contraseña para <strong data-nombre-a-restablecer>este empleado</strong>.</p>
+            <div class="campo">
+              <label for="nueva-clave">Nueva contraseña</label>
+              <input type="password" id="nueva-clave" placeholder="Mínimo 6 caracteres">
+            </div>
+          </div>
+          <div class="modal__pie">
+            <button type="button" class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
+            <button type="submit" class="btn btn-primario">Restablecer</button>
+          </div>
+        </form>
       </div>
     </div>
 
   </div>
 
+  <script src="../../js/config.js"></script>
   <script src="../../js/admin.js"></script>
 </body>
 </html>
