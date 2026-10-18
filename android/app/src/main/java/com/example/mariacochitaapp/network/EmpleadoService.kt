@@ -5,12 +5,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import com.example.mariacochitaapp.BuildConfig
 import java.io.IOException
 
 // Encapsula las llamadas de red relacionadas con empleados
 object EmpleadoService {
 
-    private const val URL_LOGIN = "http://192.168.1.54:3000/api/empleados/login"
+    private val URL_LOGIN = "${BuildConfig.API_URL}/empleados/login"
     private val client = OkHttpClient()
 
     // Valida el login contra el backend (correo + contraseña).

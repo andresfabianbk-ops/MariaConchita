@@ -8,11 +8,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import com.example.mariacochitaapp.BuildConfig
 
 // Encapsula las llamadas de red relacionadas con pedidos
 object PedidoService {
 
-    private const val URL_PEDIDOS = "http://192.168.1.54:3000/api/pedidos"
+    private val URL_PEDIDOS = "${BuildConfig.API_URL}/pedidos"
     private val client = OkHttpClient()
 
     // Envía el pedido armado al backend. onExito/onError se ejecutan en el hilo de red.
@@ -25,7 +26,6 @@ object PedidoService {
                 put("cantidad", it.cantidad)
             })
         }
-
         val cuerpo = JSONObject().apply {
             put("mesa", mesa)
             put("productos", productosJson)
@@ -34,8 +34,10 @@ object PedidoService {
         try {
             val body = cuerpo.toString().toRequestBody("application/json".toMediaType())
             val request = Request.Builder().url(URL_PEDIDOS).post(body).build()
-            client.newCall(request).execute()
-            onExito()
+            // use{} cierra la respuesta (evita la fuga) y solo se avisa éxito si el backend aceptó el pedido
+            client.newCall(request).execute().use { respuesta ->
+                if (respuesta.isSuccessful) onExito() else onError()
+            }
         } catch (_: IOException) {
             onError()
         }
