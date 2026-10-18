@@ -3,24 +3,35 @@ const db = require('../config/db');
 
 // Guarda un nuevo empleado en la base de datos
 const guardarEmpleado = async (empleado) => {
-  const [resultado] = await db.query(
-    `INSERT INTO Usuario 
-     (tipo_documento, numero_documento, nombres, apellidos, fecha_nacimiento, correo, celular, contrasena, id_rol, estado) 
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT id_rol FROM Rol WHERE nombre = ?), ?)`,
-    [
-      empleado.tipoDocumento,
-      empleado.numeroDocumento,
-      empleado.nombres,
-      empleado.apellidos,
-      empleado.fechaNacimiento,
-      empleado.correo,
-      empleado.celular,
-      empleado.contrasena,
-      empleado.cargo,
-      empleado.estado || 'Activo'
-    ]
-  );
-  return { id_usuario: resultado.insertId, ...empleado };
+  try {
+    const [resultado] = await db.query(
+      `INSERT INTO Usuario 
+      (tipo_documento, numero_documento, nombres, apellidos, fecha_nacimiento, correo, celular, contrasena, id_rol, estado) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT id_rol FROM Rol WHERE nombre = ?), ?)`,
+      [
+        empleado.tipoDocumento,
+        empleado.numeroDocumento,
+        empleado.nombres,
+        empleado.apellidos,
+        empleado.fechaNacimiento,
+        empleado.correo,
+        empleado.celular,
+        empleado.contrasena,
+        empleado.cargo,
+        empleado.estado || 'Activo'
+      ]
+    );
+    return { id_usuario: resultado.insertId, ...empleado };
+  } catch (error) {
+    // Traduce el error de llave única de MySQL a un error de negocio
+    if (error.code === 'ER_DUP_ENTRY') {
+      const campo = error.message.includes('correo') ? 'correo' : 'número de documento';
+      const duplicado = new Error(`Ya existe un empleado con ese ${campo}`);
+      duplicado.codigo = 'DUPLICADO';
+      throw duplicado;
+    }
+    throw error;
+  }
 };
 
 // Retorna todos los empleados registrados
@@ -103,4 +114,52 @@ const contarEmpleados = async () => {
   return filas[0].total;
 };
 
-module.exports = { guardarEmpleado, obtenerEmpleados, buscarPorCorreo, obtenerEmpleadoPorId, actualizarEmpleado, cambiarEstadoEmpleado, actualizarContrasena, existeCorreoDuplicado, contarEmpleados };
+// Busca un empleado por documento para validar su identidad al marcar turno (incluye hash: solo uso interno)
+const buscarPorDocumento = async (numeroDocumento) => {
+  const [filas] = await db.query(
+    `SELECT u.id_usuario, u.nombres, u.apellidos, u.contrasena, u.estado, r.nombre AS cargo
+     FROM Usuario u
+     JOIN Rol r ON r.id_rol = u.id_rol
+     WHERE u.numero_documento = ?`,
+    [numeroDocumento]
+  );
+  return filas[0] || null;
+};
+
+// Suma un cierre de turno vacío al contador del mes y devuelve el total del mes.
+// Si el mes guardado no es el actual, el contador parte de 0 (reinicio mensual sin cron)
+const registrarCierreVacio = async (idUsuario) => {
+  await db.query(
+    `UPDATE Usuario
+     SET cierres_vacios = IF(mes_cierres_vacios = DATE_FORMAT(CURDATE(), '%Y-%m'), cierres_vacios, 0) + 1,
+         mes_cierres_vacios = DATE_FORMAT(CURDATE(), '%Y-%m')
+     WHERE id_usuario = ?`,
+    [idUsuario]
+  );
+  const [filas] = await db.query(
+    'SELECT cierres_vacios FROM Usuario WHERE id_usuario = ?',
+    [idUsuario]
+  );
+  return Number(filas[0].cierres_vacios);
+};
+
+// Deja el contador de cierres vacíos en 0 (se usa al desbloquear con Activar)
+const reiniciarCierresVacios = async (idUsuario) => {
+  await db.query(
+    'UPDATE Usuario SET cierres_vacios = 0, mes_cierres_vacios = NULL WHERE id_usuario = ?',
+    [idUsuario]
+  );
+};
+
+module.exports = { guardarEmpleado,
+  obtenerEmpleados,
+  buscarPorCorreo,
+  obtenerEmpleadoPorId,
+  actualizarEmpleado,
+  cambiarEstadoEmpleado,
+  actualizarContrasena,
+  existeCorreoDuplicado,
+  contarEmpleados,
+  buscarPorDocumento,
+  registrarCierreVacio,
+  reiniciarCierresVacios };

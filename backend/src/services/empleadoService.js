@@ -1,7 +1,7 @@
 // Importa las funciones del repositorio
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { guardarEmpleado, obtenerEmpleados, buscarPorCorreo, obtenerEmpleadoPorId, actualizarEmpleado, cambiarEstadoEmpleado, actualizarContrasena, existeCorreoDuplicado, contarEmpleados} = require('../repositories/empleadoRepository');
+const { guardarEmpleado, obtenerEmpleados, buscarPorCorreo, obtenerEmpleadoPorId, actualizarEmpleado, cambiarEstadoEmpleado, reiniciarCierresVacios, actualizarContrasena, existeCorreoDuplicado, contarEmpleados} = require('../repositories/empleadoRepository');
 
 // Lógica de negocio: registra un empleado con validación completa
 const crearEmpleado = async (datosEmpleado) => {
@@ -74,6 +74,12 @@ const iniciarSesion = async (correo, contrasenaPlano) => {
     throw error;
   }
 
+  if (empleado.estado !== 'Activo') {
+    const error = new Error('Credenciales inválidas');
+    error.codigo = 'NO_AUTORIZADO';
+    throw error;
+  }
+
   const coincide = await bcrypt.compare(contrasenaPlano, empleado.contrasena);
   if (!coincide) {
     const error = new Error('Credenciales inválidas');
@@ -130,7 +136,14 @@ const editarEmpleado = async (id, datosEmpleado) => {
 };
 
 // Desactiva un empleado (borrado lógico, en vez de eliminar el registro)
-const desactivarEmpleado = async (id) => {
+const desactivarEmpleado = async (id, idSolicitante) => {
+  // Un usuario no puede desactivarse a sí mismo: podría quedar el sistema sin administrador activo
+  if (Number(id) === Number(idSolicitante)) {
+    const error = new Error('No puedes desactivar tu propio usuario');
+    error.codigo = 'OPERACION_NO_PERMITIDA';
+    throw error;
+  }
+
   const empleadoExistente = await obtenerEmpleadoPorId(id);
   if (!empleadoExistente) {
     const error = new Error('Empleado no encontrado');
@@ -152,11 +165,12 @@ const activarEmpleado = async (id) => {
   }
 
   await cambiarEstadoEmpleado(id, 'Activo');
+  await reiniciarCierresVacios(id); // desbloqueo: el contador del mes vuelve a 0
   return true;
 };
 
 // Cambia la contraseña de un empleado (hashea antes de guardar)
-const cambiarContrasena = async (id, contrasenaNueva) => {
+async function cambiarContrasena(id, contrasenaNueva) {
   const empleadoExistente = await obtenerEmpleadoPorId(id);
   if (!empleadoExistente) {
     const error = new Error('Empleado no encontrado');
@@ -173,6 +187,6 @@ const cambiarContrasena = async (id, contrasenaNueva) => {
   const contrasenaHasheada = await bcrypt.hash(contrasenaNueva, 10);
   await actualizarContrasena(id, contrasenaHasheada);
   return true;
-};
+}
 
 module.exports = { crearEmpleado, listarEmpleados, iniciarSesion, editarEmpleado, desactivarEmpleado, activarEmpleado, cambiarContrasena };

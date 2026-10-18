@@ -13,6 +13,8 @@ function mapearStatus(codigo) {
       return 404;
     case 'DUPLICADO':
       return 409;
+    case 'OPERACION_NO_PERMITIDA':
+      return 403;
     default:
       return 500;
   }
@@ -64,7 +66,7 @@ const putEmpleado = async (req, res) => {
 const putDesactivarEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
-    await desactivarEmpleado(id);
+    await desactivarEmpleado(id, req.usuario.id_usuario);
     res.status(200).json({ mensaje: 'Empleado desactivado correctamente' });
   } catch (error) {
     res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });
