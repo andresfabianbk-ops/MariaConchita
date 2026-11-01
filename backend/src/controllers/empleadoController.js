@@ -1,6 +1,6 @@
 // Importa la lógica de negocio
 const {
-  crearEmpleado, listarEmpleados, iniciarSesion, editarEmpleado, desactivarEmpleado, activarEmpleado, cambiarContrasena } = require('../services/empleadoService');
+  crearEmpleado, listarEmpleados, iniciarSesion, editarEmpleado, bloquearEmpleado, activarEmpleado, cambiarContrasena } = require('../services/empleadoService');
 
 // Traduce el código de error de negocio a un status HTTP
 function mapearStatus(codigo) {
@@ -55,19 +55,19 @@ const postLogin = async (req, res) => {
 const putEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
-    const empleado = await editarEmpleado(id, req.body);
+    const empleado = await editarEmpleado(id, req.body, req.usuario.id_usuario);
     res.status(200).json(empleado);
   } catch (error) {
     res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });
   }
 };
 
-// PUT /api/empleados/:id/desactivar → desactivar empleado (borrado lógico)
-const putDesactivarEmpleado = async (req, res) => {
+// PUT /api/empleados/:id/bloquear → bloquear empleado
+const putBloquearEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
-    await desactivarEmpleado(id, req.usuario.id_usuario);
-    res.status(200).json({ mensaje: 'Empleado desactivado correctamente' });
+    await bloquearEmpleado(id, req.usuario.id_usuario);
+    res.status(200).json({ mensaje: 'Empleado bloqueado correctamente' });
   } catch (error) {
     res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });
   }
@@ -77,7 +77,7 @@ const putDesactivarEmpleado = async (req, res) => {
 const putActivarEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
-    await activarEmpleado(id);
+    await activarEmpleado(id, req.usuario.id_usuario);
     res.status(200).json({ mensaje: 'Empleado activado correctamente' });
   } catch (error) {
     res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });
@@ -89,11 +89,11 @@ const putContrasena = async (req, res) => {
   try {
     const { id } = req.params;
     const { contrasenaNueva } = req.body;
-    await cambiarContrasena(id, contrasenaNueva);
+    await cambiarContrasena(id, contrasenaNueva, req.usuario.id_usuario);
     res.status(200).json({ mensaje: 'Contraseña actualizada correctamente' });
   } catch (error) {
     res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });
   }
 };
 
-module.exports = { postEmpleado, getEmpleados, postLogin, putEmpleado, putDesactivarEmpleado, putActivarEmpleado, putContrasena };
+module.exports = { postEmpleado, getEmpleados, postLogin, putEmpleado, putBloquearEmpleado, putActivarEmpleado, putContrasena };

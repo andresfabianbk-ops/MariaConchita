@@ -13,16 +13,31 @@
     <ul class="navbar-menu">
       <li><a href="../index.html">Inicio</a></li>
       <li><a href="#">Cocina</a></li>
-      <li><a href="#">Cerrar sesión</a></li>
+      <li><a href="#" data-cerrar-sesion>Cerrar sesión</a></li>
     </ul>
   </nav>
 
   <main class="cocina-container">
     <h1>Pedidos en cola</h1>
+    <div id="aviso-conexion-cocina" class="aviso-conexion-cocina" style="display: none;">
+      <span>Conexión perdida con el servidor.</span>
+      <button type="button" id="btn-reintentar-cocina">Reintentar</button>
+    </div>
     <div id="lista-cocina" class="lista-cocina">
       <!-- Se llena dinámicamente con cocina.js -->
     </div>
   </main>
+
+  <!-- Aviso bloqueante de pedidos cancelados (se muestra desde cocina.js) -->
+  <div id="modal-cancelaciones" class="modal-cancelaciones" style="display: none;" role="alertdialog" aria-modal="true" aria-labelledby="titulo-cancelaciones">
+    <div class="modal-cancelaciones__caja">
+      <h2 id="titulo-cancelaciones">Pedidos cancelados</h2>
+      <p>Estos pedidos fueron cancelados. Confirma que los viste para continuar.</p>
+      <ul id="lista-cancelaciones" class="lista-cancelaciones">
+        <!-- Se llena dinámicamente con cocina.js -->
+      </ul>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -30,6 +45,9 @@
   </footer>
 
   <script src="../js/config.js"></script>
+  <script src="../js/sesion.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/ui.js"></script>
   <script src="../js/comun.js"></script>
   <script src="../js/cocina.js"></script>
 </body>

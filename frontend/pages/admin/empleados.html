@@ -99,6 +99,7 @@
               <option value="">Estado: todos</option>
               <option value="Activo">Activo</option>
               <option value="Inactivo">Inactivo</option>
+              <option value="Bloqueado">Bloqueado</option>
             </select>
           </div>
           <button class="btn btn-primario" data-abrir-modal="modal-persona" id="btn-agregar-empleado">
@@ -134,7 +135,36 @@
             </table>
           </div>
         </div>
-
+                <!-- Registro de turnos (asistencia): cierre vacío = el empleado no marcó el cierre -->
+        <div class="tarjeta" style="margin-bottom: 1.75rem;">
+          <div class="tarjeta__encabezado">
+            <h2 class="tarjeta__encabezado-titulo">Registro de turnos</h2>
+          </div>
+          <div class="barra-herramientas">
+            <div class="barra-herramientas__filtros">
+              <select class="select-filtro" id="filtro-turno-empleado" aria-label="Filtrar por empleado">
+                <option value="">Todos los empleados</option>
+              </select>
+              <label for="filtro-turno-fecha" class="texto-atenuado">Día</label>
+              <input type="date" class="select-filtro" id="filtro-turno-fecha">
+            </div>
+          </div>
+          <p class="texto-atenuado" id="estado-vacio-turnos" style="display:none; padding:1rem;">No hay turnos para los filtros elegidos</p>
+          <div class="tabla-envoltorio">
+            <table class="tabla">
+              <thead>
+                <tr>
+                  <th>Empleado</th>
+                  <th>Rol</th>
+                  <th>Inicio</th>
+                  <th>Cierre</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-turnos"></tbody>
+            </table>
+          </div>
+        </div>
+        
         <!-- Matriz de permisos por rol (RF11) -->
         <div class="tarjeta">
           <div class="tarjeta__encabezado">
@@ -234,7 +264,6 @@
                 <label for="emp-tipo-documento">Tipo de documento</label>
                 <select id="emp-tipo-documento">
                   <option value="CC">Cédula de ciudadanía</option>
-                  <option value="TI">Tarjeta de identidad</option>
                   <option value="PPT">Permiso por protección temporal</option>
                   <option value="PEP">Permiso especial de permanencia</option>
                 </select>
@@ -306,6 +335,11 @@
   </div>
 
   <script src="../../js/config.js"></script>
+  <script src="../../js/sesion.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/ui.js"></script>
+  <script src="../../js/turnos.js"></script>
+  <script src="../../js/empleados.js"></script>
   <script src="../../js/admin.js"></script>
 </body>
 </html>

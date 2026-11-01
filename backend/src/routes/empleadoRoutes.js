@@ -5,7 +5,7 @@ const {
   getEmpleados,
   postLogin,
   putEmpleado,
-  putDesactivarEmpleado,
+  putBloquearEmpleado,
   putActivarEmpleado,
   putContrasena
 } = require('../controllers/empleadoController');
@@ -42,8 +42,8 @@ router.get('/', getEmpleados);
 // PUT /api/empleados/:id → editar datos del empleado
 router.put('/:id', putEmpleado);
 
-// PUT /api/empleados/:id/desactivar → desactivar empleado
-router.put('/:id/desactivar', putDesactivarEmpleado);
+// PUT /api/empleados/:id/bloquear → bloquear empleado
+router.put('/:id/bloquear', putBloquearEmpleado);
 
 // PUT /api/empleados/:id/activar → reactivar empleado
 router.put('/:id/activar', putActivarEmpleado);

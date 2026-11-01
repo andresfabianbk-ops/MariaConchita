@@ -11,11 +11,6 @@
 <!-- Barra de navegación -->
 <nav class="navbar">
   <img src="img/logo.png" alt="Mariaconchita" class="navbar-logo">
-  <ul class="navbar-menu">
-    <li><a href="../frontend/index.html">Inicio</a></li>
-    <li><a href="#">Menú</a></li>
-    <li><a href="#">Ayuda</a></li>
-  </ul>
 </nav>
 
   <!-- Formulario de login -->
@@ -33,7 +28,8 @@
         <input type="checkbox" id="recordar" name="recordar">
         <label for="recordar">Recordar sesión</label>
       </div>
-
+      
+      <p id="aviso-login" class="login-aviso" role="alert" hidden></p>
       <button type="submit" class="btn-primario">Ingresar</button>
       <button type="reset" class="btn-secundario">Cancelar</button>
 
@@ -42,6 +38,7 @@
   </main>
 
   <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
   <script src="js/comun.js"></script>
   <script src="js/login.js"></script>
   <!-- Footer -->

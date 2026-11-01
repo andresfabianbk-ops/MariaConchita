@@ -67,3 +67,117 @@
 
 .btn-preparacion { background-color: var(--naranja); }
 .btn-listo { background-color: #2e7d32; }
+
+/* Ingredientes que el cliente pidió quitar: deben verse a simple vista */
+.producto-sin {
+  color: #CC2020;
+  font-weight: bold;
+}
+
+.cocina-vacia {
+  text-align: center;
+  color: #555;
+  padding: 40px 0;
+}
+
+/* Aviso de conexión perdida (se muestra con style.display desde cocina.js) */
+.aviso-conexion-cocina {
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: #ffe0b2;
+  color: #a84d20;
+  font-weight: bold;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.aviso-conexion-cocina button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--naranja);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Aviso bloqueante de cancelaciones: cubre toda la pantalla, sin cierre por Escape ni clic fuera */
+.modal-cancelaciones {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal-cancelaciones__caja {
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: #FBF7ED;
+  border: 4px solid #CC2020;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-cancelaciones__caja h2 {
+  color: #CC2020;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.modal-cancelaciones__caja p {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.lista-cancelaciones {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Un pedido cancelado: texto a la izquierda y botón a la derecha */
+.cancelacion-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  background-color: #fff;
+  border-left: 6px solid #CC2020;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.cancelacion-item__texto {
+  font-weight: bold;
+}
+
+.btn-confirmar-cancelacion {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #C4612A;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-confirmar-cancelacion:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Evita que se desplace la página de fondo mientras el aviso está abierto */
+body.modal-cancelaciones-abierto {
+  overflow: hidden;
+}

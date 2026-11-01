@@ -2,9 +2,14 @@
 .login-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 50vh;
   padding-bottom: 80px;
+}
+
+/* Acerca la tarjeta al logo: cancela parte del margen inferior de la barra */
+.navbar + .login-container {
+  margin-top: -40px;
 }
 
 /* Tarjeta del formulario de login */
@@ -70,4 +75,15 @@
 .link-recuperar:hover {
   color: var(--rojo);
   text-decoration: underline;
+}
+
+/* Aviso de error en línea del login (reemplaza al alert) */
+.login-aviso {
+  background-color: var(--peligro-fondo);
+  color: var(--peligro);
+  border: 1px solid var(--peligro);
+  border-radius: var(--radio-m);
+  padding: var(--esp-3) var(--esp-4);
+  font-size: 14px;
+  line-height: 1.4;
 }

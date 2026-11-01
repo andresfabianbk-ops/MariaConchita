@@ -38,7 +38,7 @@ const guardarEmpleado = async (empleado) => {
 const obtenerEmpleados = async () => {
   const [filas] = await db.query(`
     SELECT u.id_usuario, u.tipo_documento AS tipoDocumento, u.numero_documento AS numeroDocumento,
-           u.nombres, u.apellidos, u.fecha_nacimiento AS fechaNacimiento, u.correo, u.celular,
+           u.nombres, u.apellidos, DATE_FORMAT(u.fecha_nacimiento, '%Y-%m-%d') AS fechaNacimiento, u.correo, u.celular,
            u.contrasena, r.nombre AS cargo, u.estado
     FROM Usuario u
     JOIN Rol r ON u.id_rol = r.id_rol
@@ -61,7 +61,7 @@ const buscarPorCorreo = async (correo) => {
 const obtenerEmpleadoPorId = async (id) => {
   const [filas] = await db.query(`
     SELECT u.id_usuario, u.tipo_documento AS tipoDocumento, u.numero_documento AS numeroDocumento,
-           u.nombres, u.apellidos, u.fecha_nacimiento AS fechaNacimiento, u.correo, u.celular,
+           u.nombres, u.apellidos, DATE_FORMAT(u.fecha_nacimiento, '%Y-%m-%d') AS fechaNacimiento, u.correo, u.celular,
            r.nombre AS cargo, u.estado
     FROM Usuario u
     JOIN Rol r ON u.id_rol = r.id_rol
@@ -70,31 +70,32 @@ const obtenerEmpleadoPorId = async (id) => {
   return filas[0] || null;
 };
 
-// Actualiza los datos editables de un empleado (no incluye contraseña)
-const actualizarEmpleado = async (id, empleado) => {
+// Actualiza los datos editables de un empleado (no incluye contraseña) y registra la auditoría
+const actualizarEmpleado = async (id, empleado, idModificador = null) => {
   const [resultado] = await db.query(
     `UPDATE Usuario
-     SET nombres = ?, apellidos = ?, correo = ?, celular = ?, id_rol = (SELECT id_rol FROM Rol WHERE nombre = ?)
+     SET nombres = ?, apellidos = ?, correo = ?, celular = ?, id_rol = (SELECT id_rol FROM Rol WHERE nombre = ?),
+         ultima_modificacion = NOW(), modificado_por = ?
      WHERE id_usuario = ?`,
-    [empleado.nombres, empleado.apellidos, empleado.correo, empleado.celular, empleado.cargo, id]
+    [empleado.nombres, empleado.apellidos, empleado.correo, empleado.celular, empleado.cargo, idModificador, id]
   );
   return resultado.affectedRows;
 };
 
-// Cambia el estado del empleado (Activo/Inactivo) — reemplaza el borrado físico
-const cambiarEstadoEmpleado = async (id, estado) => {
+// Cambia el estado del empleado y registra la auditoría
+const cambiarEstadoEmpleado = async (id, estado, idModificador = null) => {
   const [resultado] = await db.query(
-    'UPDATE Usuario SET estado = ? WHERE id_usuario = ?',
-    [estado, id]
+    'UPDATE Usuario SET estado = ?, ultima_modificacion = NOW(), modificado_por = ? WHERE id_usuario = ?',
+    [estado, idModificador, id]
   );
   return resultado.affectedRows;
 };
 
-// Actualiza la contraseña ya hasheada (el hasheo lo hace el service, no el repository)
-const actualizarContrasena = async (id, contrasenaHasheada) => {
+// Actualiza la contraseña ya hasheada y registra la auditoría (el hasheo lo hace el service)
+const actualizarContrasena = async (id, contrasenaHasheada, idModificador = null) => {
   const [resultado] = await db.query(
-    'UPDATE Usuario SET contrasena = ? WHERE id_usuario = ?',
-    [contrasenaHasheada, id]
+    'UPDATE Usuario SET contrasena = ?, ultima_modificacion = NOW(), modificado_por = ? WHERE id_usuario = ?',
+    [contrasenaHasheada, idModificador, id]
   );
   return resultado.affectedRows;
 };
@@ -104,6 +105,15 @@ const existeCorreoDuplicado = async (correo, idExcluir) => {
   const [filas] = await db.query(
     'SELECT COUNT(*) AS total FROM Usuario WHERE correo = ? AND id_usuario != ?',
     [correo, idExcluir]
+  );
+  return filas[0].total > 0;
+};
+
+// Verifica si ya existe un usuario con ese número de documento
+const existeDocumentoDuplicado = async (numeroDocumento) => {
+  const [filas] = await db.query(
+    'SELECT COUNT(*) AS total FROM Usuario WHERE numero_documento = ?',
+    [numeroDocumento]
   );
   return filas[0].total > 0;
 };
@@ -151,6 +161,39 @@ const reiniciarCierresVacios = async (idUsuario) => {
   );
 };
 
+// Suma un intento fallido de login y devuelve el total acumulado
+const registrarIntentoFallido = async (idUsuario) => {
+  await db.query(
+    'UPDATE Usuario SET intentos_fallidos = intentos_fallidos + 1 WHERE id_usuario = ?',
+    [idUsuario]
+  );
+  const [filas] = await db.query(
+    'SELECT intentos_fallidos FROM Usuario WHERE id_usuario = ?',
+    [idUsuario]
+  );
+  return Number(filas[0].intentos_fallidos);
+};
+
+// Deja el contador de intentos fallidos en 0 (login correcto o desbloqueo)
+const reiniciarIntentosFallidos = async (idUsuario) => {
+  await db.query(
+    'UPDATE Usuario SET intentos_fallidos = 0 WHERE id_usuario = ?',
+    [idUsuario]
+  );
+};
+
+// Cuenta los Administradores Activos distintos al indicado (quién podría desbloquearlo)
+const contarOtrosAdministradoresActivos = async (idExcluir) => {
+  const [filas] = await db.query(
+    `SELECT COUNT(*) AS total
+     FROM Usuario u
+     JOIN Rol r ON u.id_rol = r.id_rol
+     WHERE r.nombre = 'Administrador' AND u.estado = 'Activo' AND u.id_usuario != ?`,
+    [idExcluir]
+  );
+  return Number(filas[0].total);
+};
+
 module.exports = { guardarEmpleado,
   obtenerEmpleados,
   buscarPorCorreo,
@@ -162,4 +205,8 @@ module.exports = { guardarEmpleado,
   contarEmpleados,
   buscarPorDocumento,
   registrarCierreVacio,
-  reiniciarCierresVacios };
+  reiniciarCierresVacios,
+  existeDocumentoDuplicado,
+  registrarIntentoFallido,
+  reiniciarIntentosFallidos,
+  contarOtrosAdministradoresActivos };

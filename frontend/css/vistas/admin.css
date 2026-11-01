@@ -1059,20 +1059,6 @@
   }
 }
 
-/* ---------- PESTAÑAS: mostrar/ocultar paneles solo con CSS, sin tocar admin.js ---------- */
-
-.app-admin [data-panel-pestana] {
-  display: none;
-}
-
-.app-admin .principal:has(.pestana[aria-controls="panel-productos"].activa) #panel-productos,
-.app-admin .principal:has(.pestana[aria-controls="panel-categorias"].activa) #panel-categorias,
-.app-admin .principal:has(.pestana[aria-controls="panel-ventas"].activa) #panel-ventas,
-.app-admin .principal:has(.pestana[aria-controls="panel-productos-top"].activa) #panel-productos-top,
-.app-admin .principal:has(.pestana[aria-controls="panel-caja"].activa) #panel-caja {
-  display: block;
-}
-
 .app-admin .pestana.activa {
   color: var(--naranja);
   border-color: var(--naranja);

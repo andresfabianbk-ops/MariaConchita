@@ -216,3 +216,241 @@
   color: var(--rojo);
   font-style: italic;
 }
+
+/* --- pedidos.html (domicilio): ajustes de la Fase 2 --- */
+
+/* Un elemento con el atributo hidden debe ocultarse aunque su clase defina display (ej: .modal-overlay) */
+.modal-overlay[hidden] {
+  display: none;
+}
+
+/* Mensaje cuando el resumen aún no tiene productos */
+.resumen-pedido .resumen-vacio {
+  justify-content: center;
+  color: var(--gris-texto);
+  border-bottom: none;
+}
+
+/* Línea del resumen: texto a la izquierda, controles a la derecha */
+.resumen-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resumen-acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Control de cantidad (− n +) */
+.control-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-cantidad button {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--naranja);
+  background-color: transparent;
+  color: var(--naranja);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.control-cantidad button:hover {
+  background-color: rgba(196, 97, 42, 0.08);
+}
+
+.control-cantidad span {
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Pedidos abiertos (lista de domicilios en curso)
+   ========================================================================== */
+
+.pedidos-abiertos {
+  max-width: 1100px;
+  margin: var(--esp-6) auto;
+  padding: 0 var(--esp-4) 80px;
+}
+
+.pedidos-abiertos__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-4);
+}
+
+.pedidos-abiertos__encabezado h2 {
+  margin: 0;
+  font-family: var(--fuente-titulo);
+  color: var(--negro-suave);
+}
+
+.lista-pedidos-abiertos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--esp-4);
+}
+
+/* Mensajes de lista vacía o error: ocupan todo el ancho */
+.lista-pedidos-abiertos > p {
+  grid-column: 1 / -1;
+  color: var(--gris-texto);
+}
+
+.pedido-abierto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  padding: var(--esp-4);
+  background: var(--crema-clara);
+  border: 1px solid var(--gris-borde);
+  border-left: 4px solid var(--naranja);
+  border-radius: var(--radio-m);
+  box-shadow: var(--sombra-card);
+}
+
+.pedido-abierto__cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--negro-suave);
+}
+
+.pedido-abierto__cabecera span {
+  color: var(--gris-texto);
+  font-size: 0.875rem;
+}
+
+.pedido-abierto__cliente {
+  margin: 0;
+  color: var(--negro-suave);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.pedido-abierto__productos {
+  margin: 0;
+  padding: var(--esp-3) 0;
+  list-style: none;
+  border-top: 1px dashed var(--gris-borde-fuerte);
+  border-bottom: 1px dashed var(--gris-borde-fuerte);
+  font-size: 0.9rem;
+}
+
+.pedido-abierto__productos li + li {
+  margin-top: var(--esp-1);
+}
+
+.pedido-abierto__productos small {
+  color: var(--gris-texto);
+}
+
+.pedido-abierto__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2);
+  margin-top: auto;
+}
+
+.pedido-abierto__pie strong {
+  margin-left: auto;
+  color: var(--naranja-oscuro);
+}
+
+.etiqueta-estado {
+  padding: var(--esp-1) var(--esp-2);
+  background: var(--alerta-fondo);
+  color: var(--alerta);
+  border-radius: var(--radio-s);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.grupo-pedidos {
+  margin-bottom: var(--esp-5);
+}
+
+.grupo-pedidos h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  margin: 0 0 var(--esp-3);
+  font-family: var(--fuente-titulo);
+  color: var(--negro-suave);
+}
+
+.contador-grupo {
+  padding: 2px var(--esp-3);
+  background: var(--naranja);
+  color: var(--blanco);
+  border-radius: 999px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.8rem;
+}
+
+.aviso-conexion {
+  margin-bottom: var(--esp-4);
+  padding: var(--esp-3);
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+  border-radius: var(--radio-s);
+}
+
+.pedido-abierto__acciones {
+  display: flex;
+  gap: var(--esp-2);
+}
+
+.btn-cancelar-pedido {
+  padding: var(--esp-2) var(--esp-4);
+  background: transparent;
+  color: var(--peligro);
+  border: 1px solid var(--peligro);
+  border-radius: var(--radio-s);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transicion), color var(--transicion);
+}
+
+.btn-cancelar-pedido:hover:not(:disabled) {
+  background: var(--peligro);
+  color: var(--blanco);
+}
+
+.btn-cancelar-pedido:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-accion-pedido {
+  padding: var(--esp-2) var(--esp-4);
+  background: var(--naranja);
+  color: var(--blanco);
+  border: 1px solid var(--naranja);
+  border-radius: var(--radio-s);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transicion);
+}
+
+.btn-accion-pedido:hover:not(:disabled) {
+  background: var(--naranja-oscuro);
+}
+
+.btn-accion-pedido:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

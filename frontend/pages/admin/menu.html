@@ -90,7 +90,7 @@
         </div>
 
         <!-- ===== PANEL: PRODUCTOS ===== -->
-        <section id="panel-productos" data-panel-pestana>
+        <section id="panel-productos">
           <div class="barra-herramientas">
             <div class="barra-herramientas__filtros">
               <div class="campo-busqueda">
@@ -122,55 +122,10 @@
               <p class="estado-vacio__texto">Los productos que agregues aparecerán aquí, organizados por categoría, listos para mostrarse en Mesero, Cajero y Cocina.</p>
               <button class="btn btn-primario" data-abrir-modal="modal-producto">Agregar el primer producto</button>
             </div>
-
-            <!-- Referencia de diseño: así se vería la tabla poblada (estructura, no datos) -->
-            <div class="tabla-envoltorio">
-              <table class="tabla" aria-hidden="true">
-                <thead>
-                  <tr>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Disponible</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="celda-producto">
-                        <div class="celda-producto__miniatura"></div>
-                        <div>
-                          <div class="celda-producto__nombre">Nombre del producto</div>
-                          <div class="celda-producto__categoria">Categoría</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>$ 0.000</td>
-                    <td>
-                      <label class="interruptor">
-                        <input type="checkbox" checked>
-                        <span class="interruptor__riel"></span>
-                      </label>
-                    </td>
-                    <td>
-                      <div class="tabla__acciones">
-                        <button class="btn-icono" data-abrir-modal="modal-producto" aria-label="Editar producto">
-                          <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                        </button>
-                        <button class="btn-icono" data-abrir-modal="modal-eliminar" aria-label="Eliminar producto">
-                          <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
         </section>
 
         <!-- ===== PANEL: CATEGORÍAS ===== -->
-        <section id="panel-categorias" data-panel-pestana hidden>
+        <section id="panel-categorias" hidden>
           <div class="barra-herramientas">
             <button class="btn btn-primario" data-abrir-modal="modal-categoria">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -203,7 +158,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <form class="form-grid" id="form-producto" onsubmit="return false;">
+      <form class="form-grid" id="form-producto">
         <div class="modal__cuerpo">
           <div class="campo campo--ancho-completo">
             <label for="prod-nombre">Nombre del producto</label>
@@ -212,20 +167,11 @@
           <div class="campo">
             <label for="prod-categoria">Categoría</label>
             <select id="prod-categoria">
-              <option>Arepas</option>
-              <option>Hamburguesas</option>
-              <option>Mazorcadas</option>
-              <option>Perros calientes</option>
-              <option>Salchipapas</option>
             </select>
           </div>
           <div class="campo">
             <label for="prod-precio">Precio (COP)</label>
             <input type="number" id="prod-precio" placeholder="0">
-          </div>
-          <div class="campo campo--ancho-completo">
-            <label for="prod-descripcion">Descripción <span class="ayuda">(opcional)</span></label>
-            <textarea id="prod-descripcion" placeholder="Breve descripción para el menú digital"></textarea>
           </div>
           <div class="campo campo--ancho-completo">
             <div class="campo-check">
@@ -251,7 +197,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <form class="form-grid form-grid--simple" onsubmit="return false;">
+      <form class="form-grid form-grid--simple">
         <div class="modal__cuerpo">
           <div class="campo">
             <label for="cat-nombre">Nombre de la categoría</label>
@@ -266,28 +212,11 @@
     </div>
   </div>
   
-
-  <!-- ===== MODAL: CONFIRMAR ELIMINACIÓN ===== -->
-  <div class="fondo-modal" id="modal-eliminar">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-eliminar" style="max-width:420px;">
-      <div class="modal__encabezado">
-        <h2 class="modal__titulo" id="titulo-modal-eliminar">Eliminar producto</h2>
-        <button class="btn-icono" data-cerrar-modal aria-label="Cerrar">
-          <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="modal__cuerpo">
-        <p style="font-size:0.9rem;">¿Seguro que deseas eliminar <strong data-nombre-a-eliminar>este producto</strong> del menú digital? Esta acción no se puede deshacer.</p>
-      </div>
-      <div class="modal__pie">
-        <button class="btn btn-secundario" data-cerrar-modal>Cancelar</button>
-        <button class="btn btn-peligro" data-cerrar-modal>Eliminar</button>
-      </div>
-    </div>
-  </div>
-  </div>
-  
   <script src="../../js/config.js"></script>
+  <script src="../../js/sesion.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/ui.js"></script>
+  <script src="../../js/menu.js"></script>
   <script src="../../js/admin.js"></script>
 </body>
 </html>
