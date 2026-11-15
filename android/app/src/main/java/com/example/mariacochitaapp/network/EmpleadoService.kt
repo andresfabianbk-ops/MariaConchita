@@ -6,6 +6,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import com.example.mariacochitaapp.BuildConfig
+import android.util.Log
 import java.io.IOException
 
 // Encapsula las llamadas de red relacionadas con empleados
@@ -17,7 +18,15 @@ object EmpleadoService {
     // Valida el login contra el backend (correo + contraseña).
     // onExito recibe el cargo del empleado si las credenciales son correctas.
     // onError recibe un mensaje describiendo la causa (credenciales inválidas o fallo de conexión).
-    fun validarLogin(correo: String, contrasena: String, onExito: (String) -> Unit, onError: (String) -> Unit) {
+    // Valida el login contra el backend (correo + contraseña).
+    // onExito recibe el token JWT y el objeto empleado de la respuesta.
+    // onError recibe el mensaje del backend o un texto de fallo de conexión.
+    fun validarLogin(
+        correo: String,
+        contrasena: String,
+        onExito: (token: String, empleado: JSONObject) -> Unit,
+        onError: (String) -> Unit
+    ) {
         val cuerpoJson = JSONObject().apply {
             put("correo", correo)
             put("contrasena", contrasena)
@@ -26,18 +35,25 @@ object EmpleadoService {
         try {
             val body = cuerpoJson.toString().toRequestBody("application/json".toMediaType())
             val request = Request.Builder().url(URL_LOGIN).post(body).build()
-            val respuesta = client.newCall(request).execute()
 
-            if (!respuesta.isSuccessful) {
-                onError("Credenciales inválidas")
-                return
+            client.newCall(request).execute().use { respuesta ->
+                val cuerpo = respuesta.body?.string() ?: ""
+
+                if (!respuesta.isSuccessful) {
+                    val mensaje = try {
+                        JSONObject(cuerpo).getString("mensaje")
+                    } catch (_: Exception) {
+                        "Error del servidor (${respuesta.code})"
+                    }
+                    onError(mensaje)
+                    return
+                }
+
+                val datos = JSONObject(cuerpo)
+                onExito(datos.getString("token"), datos.getJSONObject("empleado"))
             }
-
-            val cuerpo = respuesta.body?.string() ?: ""
-            val datos = JSONObject(cuerpo)
-            val cargo = datos.getJSONObject("empleado").getString("cargo")
-            onExito(cargo)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e("EmpleadoService", "Fallo en validarLogin", e)
             onError("Error de conexión con el servidor")
         }
     }

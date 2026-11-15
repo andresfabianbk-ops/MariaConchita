@@ -5,86 +5,180 @@
     android:orientation="vertical"
     android:background="#FBF7ED">
 
-    <!-- Contenido desplazable: ocupa todo el espacio disponible excepto el botón inferior -->
-    <ScrollView
+    <!-- Barra superior: nombre del mesero y cierre de sesión -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/textoMesero"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnTurno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Turno"
+            android:textColor="#C4612A"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Cerrar sesión"
+            android:textColor="#CC2020"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Barra de pestañas: Pedidos / En espera -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tabPedidos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="14dp"
+            android:text="Pedidos"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tabEspera"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="14dp"
+            android:text="En espera"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Pestaña 1: tomar pedido (contenido de siempre + botón fijo abajo) -->
+    <LinearLayout
+        android:id="@+id/vistaPedidos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Registrar Pedido"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="23dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="Número de mesa"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+
+                <Spinner
+                    android:id="@+id/spinnerMesa"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="20dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Productos disponibles"
+                    android:textStyle="bold"
+                    android:textColor="#C4612A"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/contenedorProductos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="20dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Resumen del pedido"
+                    android:textStyle="bold"
+                    android:textColor="#C4612A"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/contenedorResumen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:padding="12dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Botón fijo en la parte inferior de la pestaña -->
+        <Button
+            android:id="@+id/btnEnviarPedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:backgroundTint="#C4612A"
+            android:text="Enviar a cocina"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <!-- Pestaña 2: pedidos en espera (oculta al inicio; se llena en el siguiente paso) -->
+    <ScrollView
+        android:id="@+id/vistaEspera"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
 
         <LinearLayout
+            android:id="@+id/contenedorEspera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
             android:padding="24dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Registrar Pedido"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
+                android:id="@+id/textoSinPedidos"
                 android:layout_width="match_parent"
-                android:layout_height="23dp"
-                android:layout_marginBottom="4dp"
-                android:text="Número de mesa"
-                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="No hay pedidos en espera"
                 android:textColor="#000000" />
-
-            <Spinner
-                android:id="@+id/spinnerMesa"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginBottom="20dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Productos disponibles"
-                android:textStyle="bold"
-                android:textColor="#C4612A"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:id="@+id/contenedorProductos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Resumen del pedido"
-                android:textStyle="bold"
-                android:textColor="#C4612A"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:id="@+id/contenedorResumen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#FFFFFF"
-                android:padding="12dp" />
-
         </LinearLayout>
     </ScrollView>
-
-    <!-- Botón fijo en la parte inferior de la pantalla -->
-    <Button
-        android:id="@+id/btnEnviarPedido"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:backgroundTint="#C4612A"
-        android:text="Enviar a cocina"
-        android:textColor="#FFFFFF" />
-
 
 </LinearLayout>
