@@ -9,6 +9,7 @@ const INTERVALO_CONSULTA_COCINA = 5000;
 let temporizadorCocina = null;
 let consultandoCocina = false;
 let ultimaFirmaCocina = '';
+let ultimaFirmaCancelaciones = '';
 
 // Arma la tarjeta de un pedido con todos los textos escapados
 const construirTarjetaCocina = (pedido) => {
@@ -59,6 +60,35 @@ const renderizarPedidosCocina = (pedidos) => {
     : '<p class="cocina-vacia">No hay pedidos en cola.</p>';
 };
 
+// Muestra el modal bloqueante con los pedidos cancelados que cocina aún debe confirmar
+const renderizarCancelaciones = (pedidos) => {
+  const modal = document.getElementById('modal-cancelaciones');
+  const lista = document.getElementById('lista-cancelaciones');
+  if (!modal || !lista || !Array.isArray(pedidos)) return;
+
+  const ordenados = [...pedidos].sort((a, b) => a.id_pedido - b.id_pedido);
+  const firma = ordenados.map((p) => p.id_pedido).join('|');
+
+  if (firma !== ultimaFirmaCancelaciones) {
+    ultimaFirmaCancelaciones = firma;
+    lista.innerHTML = ordenados.map((pedido) => {
+      const destino = pedido.cliente
+        ? `Domicilio - ${escaparHtml(pedido.cliente.nombreCliente)}`
+        : `Mesa ${escaparHtml(String(pedido.mesa))}`;
+      return `
+        <li class="cancelacion-item">
+          <span class="cancelacion-item__texto">Pedido #${pedido.id_pedido} - ${destino}</span>
+          <button type="button" class="btn-confirmar-cancelacion" data-accion-cancelacion="confirmar" data-id-pedido="${pedido.id_pedido}">Confirmar</button>
+        </li>
+      `;
+    }).join('');
+  }
+
+  const hayAvisos = ordenados.length > 0;
+  modal.style.display = hayAvisos ? 'flex' : 'none';
+  document.body.classList.toggle('modal-cancelaciones-abierto', hayAvisos);
+};
+
 // Muestra u oculta el aviso de conexión perdida (style.display: el CSS puede anular hidden)
 const mostrarAvisoConexionCocina = (visible) => {
   const aviso = document.getElementById('aviso-conexion-cocina');
@@ -85,8 +115,12 @@ const cargarPedidosCocina = async () => {
   consultandoCocina = true;
 
   try {
-    const pedidos = await peticionApi(`/pedidos?estado=${encodeURIComponent(ESTADOS_COCINA)}`);
+    const [pedidos, cancelaciones] = await Promise.all([
+      peticionApi(`/pedidos?estado=${encodeURIComponent(ESTADOS_COCINA)}`),
+      peticionApi('/pedidos?cancelacionPendiente=1')
+    ]);
     renderizarPedidosCocina(pedidos);
+    renderizarCancelaciones(cancelaciones);
     mostrarAvisoConexionCocina(false);
     iniciarConsultaCocina();
   } catch (error) {
@@ -123,6 +157,20 @@ const cambiarEstadoPedidoCocina = async (idPedido, accion, boton) => {
   }
 };
 
+// El cocinero confirma que vio la cancelación; el backend responde 403 si ya estaba confirmada
+const confirmarCancelacionCocina = async (idPedido, boton) => {
+  boton.disabled = true;
+  try {
+    await peticionApi(`/pedidos/${idPedido}/confirmar-cancelacion`, { method: 'PUT' });
+    mostrarNotificacion(`Cancelación del pedido #${idPedido} confirmada`, 'exito');
+  } catch (error) {
+    // peticionApi ya mostró el aviso de error
+    boton.disabled = false;
+  } finally {
+    await cargarPedidosCocina();
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   if (!verificarSesion()) return;
 
@@ -131,6 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  renderizarMenuLateral();
+  inicializarMenuCocina();
   inicializarCerrarSesion();
   document.getElementById('btn-reintentar-cocina').addEventListener('click', cargarPedidosCocina);
 
@@ -141,6 +191,20 @@ document.addEventListener('DOMContentLoaded', () => {
     cambiarEstadoPedidoCocina(Number(boton.dataset.idPedido), boton.dataset.accionPedido, boton);
   });
 
+    // Botones Confirmar del aviso de cancelación (listener delegado)
+  document.getElementById('lista-cancelaciones').addEventListener('click', (evento) => {
+    const boton = evento.target.closest('button[data-accion-cancelacion]');
+    if (!boton || boton.disabled) return;
+    confirmarCancelacionCocina(Number(boton.dataset.idPedido), boton);
+  });
+
+  // El aviso es obligatorio: Escape no puede cerrarlo
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && document.body.classList.contains('modal-cancelaciones-abierto')) {
+      evento.preventDefault();
+    }
+  });
+
   // Al volver a la pestaña, refresca de inmediato si la consulta sigue activa
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && temporizadorCocina) cargarPedidosCocina();
@@ -148,3 +212,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cargarPedidosCocina();
 });
+
+// Menú lateral de Cocina: siempre oculto; solo se abre con la hamburguesa
+function inicializarMenuCocina() {
+  const contenedor = document.querySelector('.app-shell');
+  const boton = document.querySelector('[data-accion="toggle-sidebar"]');
+  if (!contenedor || !boton) return;
+
+  const alternar = (abrir) => {
+    contenedor.classList.toggle('sidebar-abierta', abrir);
+    boton.setAttribute('aria-expanded', String(abrir));
+  };
+
+  boton.addEventListener('click', () => alternar(!contenedor.classList.contains('sidebar-abierta')));
+  document.querySelector('.overlay-sidebar').addEventListener('click', () => alternar(false));
+  document.querySelector('.sidebar__cerrar')?.addEventListener('click', () => alternar(false));
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && contenedor.classList.contains('sidebar-abierta')) alternar(false);
+  });
+}

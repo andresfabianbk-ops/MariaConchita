@@ -149,7 +149,12 @@ function asignarEventosCategorias() {
       const categoria = categoriasCache.find((c) => c.id_categoria == id);
       if (!categoria) return;
 
-      const confirmar = confirm(`¿Seguro que deseas eliminar la categoría "${categoria.nombre}"?`);
+      const confirmar = await confirmarAccion({
+        titulo: 'Eliminar categoría',
+        mensaje: `¿Seguro que deseas eliminar la categoría "${categoria.nombre}"?`,
+        textoConfirmar: 'Eliminar',
+        peligro: true
+      });
       if (!confirmar) return;
 
       try {
@@ -337,6 +342,7 @@ function asignarEventosProductos() {
       document.getElementById('prod-precio').value = producto.precio;
       document.getElementById('prod-categoria').value = producto.id_categoria;
       document.getElementById('prod-disponible').checked = !!producto.disponible;
+      mostrarRecetaEnFormulario(producto.receta);
       document.getElementById('titulo-modal-producto').textContent = 'Editar producto';
 
       document.getElementById('modal-producto').classList.add('visible');
@@ -350,7 +356,12 @@ function asignarEventosProductos() {
       const producto = productosCache.find((p) => p.id_producto == id);
       if (!producto) return;
 
-      const confirmar = confirm(`¿Seguro que deseas eliminar "${producto.nombre}" del menú digital?`);
+      const confirmar = await confirmarAccion({
+        titulo: 'Eliminar producto',
+        mensaje: `¿Seguro que deseas eliminar "${producto.nombre}" del menú digital?`,
+        textoConfirmar: 'Eliminar',
+        peligro: true
+      });
       if (!confirmar) return;
 
       try {
@@ -398,6 +409,7 @@ function inicializarBotonAgregarProducto() {
       const formulario = document.getElementById('form-producto');
       formulario.reset();
       delete formulario.dataset.idProducto;
+      mostrarRecetaEnFormulario();
       document.getElementById('titulo-modal-producto').textContent = 'Agregar producto';
     });
   });
@@ -412,11 +424,15 @@ function inicializarFormularioProducto() {
     evento.preventDefault();
     const idProducto = formulario.dataset.idProducto;
 
+    const receta = leerRecetaDelFormulario();
+    if (receta === null) return; // ya se avisó cuál es el problema
+
     const datosProducto = {
       nombre: document.getElementById('prod-nombre').value.trim(),
       precio: Number(document.getElementById('prod-precio').value),
       id_categoria: Number(document.getElementById('prod-categoria').value),
-      disponible: document.getElementById('prod-disponible').checked
+      disponible: document.getElementById('prod-disponible').checked,
+      receta
     };
 
     try {
@@ -435,6 +451,105 @@ function inicializarFormularioProducto() {
   });
 }
 
+// Insumos disponibles para armar recetas (se cargan una vez al abrir la página)
+let insumosRecetaCache = [];
+
+async function cargarInsumosParaReceta() {
+  try {
+    insumosRecetaCache = await peticionApi('/insumos');
+  } catch (error) {
+    // El error ya se notificó dentro de peticionApi
+  }
+}
+
+// Agrega una fila de ingrediente al modal (vacía, o precargada al editar)
+function agregarFilaIngrediente(ingrediente = {}) {
+  const opciones = insumosRecetaCache
+    .map((i) => `<option value="${i.id_insumo}" ${i.id_insumo == ingrediente.id_insumo ? 'selected' : ''}>${escaparHtml(i.nombre)}</option>`)
+    .join('');
+
+  const fila = document.createElement('div');
+  fila.className = 'receta-fila';
+  fila.innerHTML = `
+    <select class="receta-fila__insumo" aria-label="Insumo">
+      <option value="">Seleccionar insumo...</option>${opciones}
+    </select>
+    <input type="number" class="receta-fila__cantidad" min="0" step="0.001" placeholder="Cantidad" aria-label="Cantidad" value="${ingrediente.cantidad_requerida ?? ''}">
+    <span class="receta-fila__unidad"></span>
+    <label class="campo-check receta-fila__excluible">
+      <input type="checkbox" class="receta-fila__check" ${ingrediente.es_excluible ? 'checked' : ''}> Se puede quitar
+    </label>
+    <button type="button" class="btn-icono" data-quitar-ingrediente aria-label="Quitar ingrediente" title="Quitar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  document.getElementById('prod-receta').appendChild(fila);
+  actualizarUnidadFila(fila);
+}
+
+// Muestra la unidad del insumo elegido junto a la cantidad
+function actualizarUnidadFila(fila) {
+  const idInsumo = fila.querySelector('.receta-fila__insumo').value;
+  const insumo = insumosRecetaCache.find((i) => i.id_insumo == idInsumo);
+  fila.querySelector('.receta-fila__unidad').textContent = insumo ? insumo.unidad_medida : '';
+}
+
+// Reemplaza las filas del modal por la receta del producto (vacía en modo crear)
+function mostrarRecetaEnFormulario(receta = []) {
+  document.getElementById('prod-receta').innerHTML = '';
+  receta.forEach((ingrediente) => agregarFilaIngrediente(ingrediente));
+}
+
+// Lee y valida las filas de la receta. Devuelve el arreglo, o null si hay un error (ya notificado)
+function leerRecetaDelFormulario() {
+  const receta = [];
+  const idsVistos = new Set();
+
+  for (const fila of document.querySelectorAll('#prod-receta .receta-fila')) {
+    const idInsumo = Number(fila.querySelector('.receta-fila__insumo').value);
+    const cantidad = Number(fila.querySelector('.receta-fila__cantidad').value);
+
+    if (!idInsumo) {
+      mostrarNotificacion('Selecciona el insumo de cada ingrediente');
+      return null;
+    }
+    if (idsVistos.has(idInsumo)) {
+      mostrarNotificacion('Un insumo no puede repetirse en la receta');
+      return null;
+    }
+    if (!(cantidad > 0)) {
+      mostrarNotificacion('La cantidad de cada ingrediente debe ser mayor a 0');
+      return null;
+    }
+
+    idsVistos.add(idInsumo);
+    receta.push({
+      id_insumo: idInsumo,
+      cantidad_requerida: cantidad,
+      es_excluible: fila.querySelector('.receta-fila__check').checked
+    });
+  }
+  return receta;
+}
+
+// Listeners de la sección de receta: agregar, cambiar insumo (unidad) y quitar fila
+function inicializarRecetaProducto() {
+  const contenedor = document.getElementById('prod-receta');
+  if (!contenedor) return;
+
+  document.getElementById('btn-agregar-ingrediente').addEventListener('click', () => agregarFilaIngrediente());
+
+  contenedor.addEventListener('change', (evento) => {
+    if (!evento.target.matches('.receta-fila__insumo')) return;
+    actualizarUnidadFila(evento.target.closest('.receta-fila'));
+  });
+
+  contenedor.addEventListener('click', (evento) => {
+    const botonQuitar = evento.target.closest('[data-quitar-ingrediente]');
+    if (botonQuitar) botonQuitar.closest('.receta-fila').remove();
+  });
+}
+
 // Punto de entrada del menú: solo actúa en menu.html. Categorías primero, para que
 // los productos ya encuentren el nombre de su categoría (corrige "Sin categoría").
 async function inicializarMenu() {
@@ -444,6 +559,8 @@ async function inicializarMenu() {
   inicializarBotonAgregarProducto();
   inicializarFormularioProducto();
   inicializarFiltrosProductos();
+  inicializarRecetaProducto();
+  await cargarInsumosParaReceta(); // antes de los productos, para que el modal de edición ya tenga el selector
   await cargarCategorias();
   await cargarProductos();
 }

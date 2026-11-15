@@ -17,20 +17,23 @@ const PAGINA_INICIO_POR_CARGO = {
   Cocinero: 'pages/cocina.html'
 };
 
-// Guarda los datos de la sesión que devuelve el login
-function guardarSesion(token, empleado) {
-  localStorage.setItem(CLAVE_TOKEN, token);
-  localStorage.setItem(CLAVE_EMPLEADO, JSON.stringify(empleado));
+// Guarda la sesión: con "recordar" persiste en localStorage; sin él, solo dura mientras la pestaña esté abierta (sessionStorage)
+function guardarSesion(token, empleado, recordar = false) {
+  limpiarSesion(); // evita que quede una copia vieja en el otro almacenamiento
+  const almacenamiento = recordar ? localStorage : sessionStorage;
+  almacenamiento.setItem(CLAVE_TOKEN, token);
+  almacenamiento.setItem(CLAVE_EMPLEADO, JSON.stringify(empleado));
 }
 
 function obtenerToken() {
-  return localStorage.getItem(CLAVE_TOKEN);
+  return sessionStorage.getItem(CLAVE_TOKEN) || localStorage.getItem(CLAVE_TOKEN);
 }
 
 // Devuelve el empleado guardado, o null si no hay o está dañado
 function obtenerEmpleado() {
   try {
-    return JSON.parse(localStorage.getItem(CLAVE_EMPLEADO));
+    const guardado = sessionStorage.getItem(CLAVE_EMPLEADO) || localStorage.getItem(CLAVE_EMPLEADO);
+    return JSON.parse(guardado);
   } catch (error) {
     return null;
   }
@@ -39,11 +42,13 @@ function obtenerEmpleado() {
 function limpiarSesion() {
   localStorage.removeItem(CLAVE_TOKEN);
   localStorage.removeItem(CLAVE_EMPLEADO);
+  sessionStorage.removeItem(CLAVE_TOKEN);
+  sessionStorage.removeItem(CLAVE_EMPLEADO);
 }
 
 // Valida credenciales en el backend y guarda la sesión solo si el cargo entra al panel web.
 // Devuelve la URL de inicio del cargo; si algo falla lanza Error con el mensaje a mostrar
-async function autenticarEmpleado(correo, contrasena) {
+async function autenticarEmpleado(correo, contrasena, recordar = false) {
   let respuesta;
   try {
     respuesta = await fetch(`${API_URL}/empleados/login`, {
@@ -69,7 +74,7 @@ async function autenticarEmpleado(correo, contrasena) {
     throw new Error('Rol no reconocido');
   }
 
-  guardarSesion(datos.token, datos.empleado); // solo se guarda si el cargo es válido
+  guardarSesion(datos.token, datos.empleado, recordar); // solo se guarda si el cargo es válido
   return new URL(pagina, URL_INDEX).href;
 }
 

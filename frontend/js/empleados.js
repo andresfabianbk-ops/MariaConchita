@@ -79,6 +79,9 @@ function renderizarEmpleados(empleados) {
           <button class="btn-icono" data-editar-empleado="${e.id}" aria-label="Editar empleado" title="Editar">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
           </button>
+          <button class="btn-icono" data-eliminar-empleado="${e.id}" aria-label="Eliminar empleado" title="Eliminar empleado">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
         </div>
       </td>
     </tr>`;
@@ -123,6 +126,30 @@ function asignarEventosEmpleados() {
       idEmpleadoRestablecer = empleado.id;
       document.querySelector('[data-nombre-a-restablecer]').textContent = `${empleado.nombres} ${empleado.apellidos}`;
       document.getElementById('modal-restablecer').classList.add('visible');
+    });
+  });
+
+  // Eliminar: confirma y manda al empleado al historial (EmpleadoEliminado)
+  document.querySelectorAll('[data-eliminar-empleado]').forEach((boton) => {
+    boton.addEventListener('click', async () => {
+      const empleado = empleadosCache.find((e) => e.id == boton.dataset.eliminarEmpleado);
+      if (!empleado) return;
+
+      const confirmar = await confirmarAccion({
+        titulo: 'Eliminar empleado',
+        mensaje: `¿Seguro que deseas eliminar a ${empleado.nombres} ${empleado.apellidos}? Perderá el acceso al sistema y pasará al historial de empleados eliminados.`,
+        textoConfirmar: 'Eliminar',
+        peligro: true
+      });
+      if (!confirmar) return;
+
+      try {
+        await peticionApi(`/empleados/${empleado.id}`, { method: 'DELETE' });
+        mostrarNotificacion('Empleado eliminado correctamente', 'exito');
+        await cargarEmpleados();
+      } catch (error) {
+        // El mensaje (por ejemplo, no puedes eliminar tu propio usuario) ya se muestra dentro de peticionApi
+      }
     });
   });
 
@@ -234,6 +261,7 @@ function inicializarEmpleados() {
 
   cargarEmpleados();
   inicializarBotonAgregarEmpleado();
+  inicializarHistorialEmpleados();
   inicializarFormularioEmpleado();
   inicializarFormularioRestablecer();
 
@@ -258,4 +286,73 @@ function aplicarFiltrosEmpleados() {
   });
 
   renderizarEmpleados(filtrados);
+}
+
+// ---------- Historial de empleados eliminados ----------
+
+let historialEmpleadosCache = [];
+
+// Fecha y hora en hora de Bogotá (la API entrega UTC)
+function formatearFechaHora(valor) {
+  if (!valor) return '';
+  return new Date(valor).toLocaleString('es-CO', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'America/Bogota'
+  });
+}
+
+function renderizarHistorialEmpleados(lista) {
+  document.getElementById('historial-vacio').style.display = lista.length ? 'none' : '';
+  document.getElementById('tbody-historial-empleados').innerHTML = lista.map((e) => `
+    <tr>
+      <td>
+        <div class="celda-producto__nombre">${escaparHtml(e.nombres)} ${escaparHtml(e.apellidos)}</div>
+        <div class="celda-producto__categoria">${escaparHtml(e.correo)}</div>
+      </td>
+      <td>${escaparHtml(e.tipoDocumento)} ${escaparHtml(e.numeroDocumento)}</td>
+      <td>${escaparHtml(e.cargo)}</td>
+      <td>${escaparHtml(formatearFechaHora(e.fechaRegistro))}</td>
+      <td>${escaparHtml(formatearFechaHora(e.fechaEliminacion))}</td>
+    </tr>`).join('');
+}
+
+function filtrarHistorialEmpleados() {
+  const texto = document.getElementById('buscar-historial').value.trim().toLowerCase();
+  const filtrados = historialEmpleadosCache.filter((e) =>
+    `${e.nombres} ${e.apellidos} ${e.numeroDocumento} ${e.correo}`.toLowerCase().includes(texto));
+  renderizarHistorialEmpleados(filtrados);
+}
+
+async function abrirHistorialEmpleados() {
+  document.getElementById('buscar-historial').value = '';
+  try {
+    historialEmpleadosCache = await peticionApi('/empleados/eliminados');
+    filtrarHistorialEmpleados();
+    document.getElementById('modal-historial').classList.add('visible');
+  } catch (error) {
+    // El error ya se notificó dentro de peticionApi
+  }
+}
+
+function cerrarHistorialEmpleados() {
+  document.getElementById('modal-historial').classList.remove('visible');
+}
+
+function inicializarHistorialEmpleados() {
+  const modal = document.getElementById('modal-historial');
+  const boton = document.getElementById('btn-historial-empleados');
+  if (!modal || !boton) return;
+
+  boton.addEventListener('click', abrirHistorialEmpleados);
+  modal.querySelectorAll('[data-cerrar-historial]').forEach((elemento) => {
+    elemento.addEventListener('click', cerrarHistorialEmpleados);
+  });
+  modal.addEventListener('click', (evento) => {
+    if (evento.target === modal) cerrarHistorialEmpleados();
+  });
+  document.getElementById('buscar-historial').addEventListener('input', filtrarHistorialEmpleados);
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && modal.classList.contains('visible')) cerrarHistorialEmpleados();
+  });
 }

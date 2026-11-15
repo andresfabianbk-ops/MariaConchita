@@ -8,18 +8,28 @@
 </head>
 <body>
 
-  <!-- Barra de navegación -->
-  <nav class="navbar">
-    <img src="../img/logo.png" alt="Mariaconchita" class="navbar-logo">
-    <ul class="navbar-menu">
-      <li><a href="../index.html">Inicio</a></li>
-      <li><a href="pedidos.html">Pedidos a domicilio</a></li>
-      <li><a href="#" data-cerrar-sesion>Cerrar sesión</a></li>
-    </ul>
-  </nav>
+  <div class="app-admin app-shell">
+
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="overlay-sidebar"></div>
+
+    <div class="contenido">
+      <header class="topbar">
+        <div class="topbar__titulos">
+          <button class="btn-menu-movil" data-accion="toggle-sidebar" aria-label="Abrir o colapsar menú" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1 class="topbar__titulo">Pedidos</h1>
+            <p class="topbar__subtitulo">Registro de pedidos a domicilio y seguimiento</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="principal">
 
   <!-- Registro de pedido a domicilio -->
-  <main class="pedido-container">
+  <div class="pedido-container">
     <form id="form-pedido" class="pedido-form" autocomplete="off">
       <h1>Registrar Pedido a Domicilio</h1>
 
@@ -50,7 +60,7 @@
 
       <button type="submit" id="btn-enviar-pedido" class="btn-primario">Enviar a cocina</button>
     </form>
-  </main>
+  </div>
 
     <!-- Pedidos abiertos -->
   <section class="pedidos-abiertos" aria-labelledby="titulo-pedidos-abiertos">
@@ -77,10 +87,9 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2026 Mariaconchita - Comidas Rápidas. Todos los derechos reservados.</p>
-  </footer>
+      </main>
+    </div>
+  </div>
 
   <!-- Modal de personalización del producto -->
   <div id="modal-personalizar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="personalizar-titulo" hidden>
@@ -99,6 +108,7 @@
   <script src="../js/sesion.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/ui.js"></script>
+  <script src="../js/menu-lateral.js"></script>
   <script src="../js/comun.js"></script>
   <script src="../js/pedidos.js"></script>
 </body>

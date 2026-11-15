@@ -7,15 +7,26 @@
 </head>
 <body>
 
-  <!-- Barra de navegación -->
-  <nav class="navbar">
-    <img src="../img/logo.png" alt="Mariaconchita" class="navbar-logo">
-    <ul class="navbar-menu">
-      <li><a href="../index.html">Inicio</a></li>
-      <li><a href="#">Cocina</a></li>
-      <li><a href="#" data-cerrar-sesion>Cerrar sesión</a></li>
-    </ul>
-  </nav>
+    <div class="app-admin app-shell app-cocina">
+
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="overlay-sidebar"></div>
+
+    <div class="contenido">
+      <header class="topbar">
+        <div class="topbar__titulos">
+          <button class="btn-menu-movil" data-accion="toggle-sidebar" aria-label="Abrir menú" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h1 class="topbar__titulo">Cocina</h1>
+            <p class="topbar__subtitulo">Pedidos en cola</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="principal">
+  <div class="cocina-container">
 
   <main class="cocina-container">
     <h1>Pedidos en cola</h1>
@@ -26,7 +37,10 @@
     <div id="lista-cocina" class="lista-cocina">
       <!-- Se llena dinámicamente con cocina.js -->
     </div>
-  </main>
+    </div>
+      </main>
+    </div>
+  </div>
 
   <!-- Aviso bloqueante de pedidos cancelados (se muestra desde cocina.js) -->
   <div id="modal-cancelaciones" class="modal-cancelaciones" style="display: none;" role="alertdialog" aria-modal="true" aria-labelledby="titulo-cancelaciones">
@@ -39,15 +53,11 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2026 Mariaconchita - Comidas Rápidas. Todos los derechos reservados.</p>
-  </footer>
-
   <script src="../js/config.js"></script>
   <script src="../js/sesion.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/ui.js"></script>
+  <script src="../js/menu-lateral.js"></script>
   <script src="../js/comun.js"></script>
   <script src="../js/cocina.js"></script>
 </body>

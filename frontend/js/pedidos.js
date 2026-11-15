@@ -293,8 +293,15 @@ const cargarPedidosAbiertos = async () => {
 
 // Cancela un pedido Pendiente; el backend devuelve el stock al inventario
 const cancelarPedidoAbierto = async (idPedido, boton) => {
-  if (!confirm(`¿Cancelar el pedido #${idPedido}? Esta acción no se puede deshacer.`)) return;
-
+  const confirmar = await confirmarAccion({
+    titulo: 'Cancelar pedido',
+    mensaje: `¿Cancelar el pedido #${idPedido}? Esta acción no se puede deshacer.`,
+    textoConfirmar: 'Cancelar pedido',
+    textoCancelar: 'Volver',
+    peligro: true
+  });
+  
+  if (!confirmar) return;
   boton.disabled = true;
   try {
     await peticionApi(`/pedidos/${idPedido}/cancelar`, { method: 'PUT' });
@@ -397,7 +404,9 @@ document.addEventListener('DOMContentLoaded', () => {
     mostrarBloqueoSesion('No tienes permiso para ver esta página.');
     return;
   }
-
+  
+  renderizarMenuLateral();
+  inicializarSidebar();
   inicializarCerrarSesion();
   renderizarResumen();
   cargarMenu();

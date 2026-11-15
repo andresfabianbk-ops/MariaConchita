@@ -776,11 +776,11 @@
 .app-admin .modal__pie {
   display: flex;
   justify-content: flex-end;
+  align-items: center; /* los botones conservan su altura natural aunque el pie crezca */
   gap: 0.65rem;
   padding: 1.1rem 1.5rem;
   border-top: 1px solid var(--gris-borde);
 }
-
 /* ---------- ALERTA DE STOCK BAJO (Inventario) ---------- */
 
 .app-admin .alerta-banner {
@@ -1114,4 +1114,172 @@
   color: #888;
   font-style: italic;
   margin: 0;
+}
+
+/* ---------- RECETA EN EL MODAL DE PRODUCTO ---------- */
+
+.app-admin .receta-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.app-admin .receta-fila__insumo {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.app-admin .receta-fila__cantidad {
+  flex: 0 0 90px;
+  min-width: 0;
+}
+
+.app-admin .receta-fila__unidad {
+  min-width: 2.2rem;
+  font-size: 0.85rem;
+  color: var(--gris-texto);
+}
+
+.app-admin .campo .receta-fila__excluible {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.app-admin .campo .receta-fila__check {
+  width: auto;
+}
+
+/* ---------- IMPRESIÓN (PDF de Reportes con window.print) ---------- */
+
+@page {
+  margin: 1.5cm;
+}
+
+@media print {
+  .app-admin {
+    display: block;
+    min-height: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact; /* conserva el fondo de las insignias */
+  }
+
+  /* Lo que no va en el papel */
+  .app-admin .sidebar,
+  .app-admin .overlay-sidebar,
+  .app-admin .btn-menu-movil,
+  .app-admin .topbar__usuario,
+  .app-admin .topbar__subtitulo,
+  .app-admin .pestanas,
+  .app-admin .rejilla-reporte > aside,
+  .app-admin .fondo-modal {
+    display: none !important;
+  }
+
+  /* Vuelve a mostrar el contenido: gana a "body * { visibility: hidden }" de la regla del ticket por especificidad */
+  .app-admin .contenido,
+  .app-admin .contenido * {
+    visibility: visible;
+  }
+
+  /* El !important gana a .app-shell.sidebar-colapsada .contenido */
+  .app-admin .contenido {
+    display: block;
+    margin-left: 0 !important;
+  }
+
+  .app-admin .topbar {
+    position: static;
+    padding: 0 0 1rem;
+    background: none;
+  }
+
+  .app-admin .principal {
+    padding: 0;
+  }
+
+  .app-admin .rejilla-reporte {
+    display: block;
+  }
+
+  /* Sin recortes ni sombras: el overflow hidden cortaría las tablas largas entre páginas */
+  .app-admin .tarjeta,
+  .app-admin .tabla-envoltorio {
+    overflow: visible;
+    box-shadow: none;
+  }
+
+  .app-admin .tabla thead {
+    display: table-header-group; /* repite el encabezado en cada página */
+  }
+
+  .app-admin .tabla tr {
+    break-inside: avoid; /* una fila no se parte entre dos páginas */
+  }
+}
+
+/* Al imprimir el ticket de factura (Caja), el panel completo no se imprime */
+@media print {
+  body:has(#modal-factura:not([hidden])) .app-admin {
+    display: none !important;
+  }
+}
+
+/* Cocina: menú lateral siempre oculto, en cualquier ancho; se abre con la hamburguesa */
+.app-cocina .sidebar {
+  transform: translateX(-100%);
+}
+
+.app-cocina.sidebar-abierta .sidebar {
+  transform: translateX(0);
+}
+
+.app-cocina.sidebar-abierta .overlay-sidebar {
+  display: block;
+}
+
+.app-cocina .contenido {
+  margin-left: 0;
+}
+
+/* Botón más grande: se usa en pantalla táctil y con las manos ocupadas */
+.app-cocina .btn-menu-movil {
+  width: 56px;
+  height: 56px;
+}
+
+/* En Cocina el menú es en superposición también en escritorio: X y overlay visibles */
+.app-cocina .overlay-sidebar {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 30;
+}
+
+.app-cocina .sidebar__cerrar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 1.25rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--crema-clara);
+}
+
+.app-cocina .sidebar__cerrar svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.app-cocina.sidebar-abierta .sidebar {
+  box-shadow: var(--sombra-modal);
 }

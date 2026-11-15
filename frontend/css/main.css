@@ -10,6 +10,7 @@
 @import url('componentes/navbar.css');
 @import url('componentes/botones.css');
 @import url('componentes/footer.css');
+@import url('componentes/confirmacion.css');
 
 @import url('vistas/login.css');
 @import url('vistas/pedidos.css');

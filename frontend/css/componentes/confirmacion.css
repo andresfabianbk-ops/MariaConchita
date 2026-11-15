@@ -1,0 +1,99 @@
+/* ============================================================
+   CONFIRMACION.CSS — Ventana de confirmación reutilizable
+   La crea confirmarAccion() de ui.js. No usa .app-admin: la
+   comparten el panel de Administrador y pedidos.html.
+   ============================================================ */
+
+.confirmacion {
+  position: fixed;
+  inset: 0;
+  background: rgba(36, 31, 26, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 200; /* por encima de los modales (100) */
+}
+
+.confirmacion.visible {
+  display: flex;
+}
+
+.confirmacion__ventana {
+  background: var(--crema-clara);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-modal);
+  width: 100%;
+  max-width: 420px;
+  padding: 1.5rem;
+  animation: aparecer-confirmacion 0.2s ease;
+}
+
+@keyframes aparecer-confirmacion {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.confirmacion__titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--negro-suave);
+}
+
+.confirmacion__mensaje {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--gris-texto);
+}
+
+.confirmacion__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.confirmacion__boton {
+  padding: 0.65rem 1.15rem;
+  border: 1px solid transparent;
+  border-radius: var(--radio-m);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transicion), color var(--transicion), border-color var(--transicion);
+}
+
+.confirmacion__boton:focus-visible {
+  outline: 3px solid var(--naranja);
+  outline-offset: 2px;
+}
+
+.confirmacion__boton--cancelar {
+  background: var(--blanco);
+  color: var(--negro-suave);
+  border-color: var(--gris-borde);
+}
+
+.confirmacion__boton--cancelar:hover {
+  border-color: var(--naranja);
+  color: var(--naranja);
+}
+
+.confirmacion__boton--confirmar {
+  background: var(--naranja);
+  color: var(--crema-clara);
+}
+
+.confirmacion__boton--confirmar:hover {
+  background: var(--naranja-oscuro);
+}
+
+.confirmacion__boton--confirmar.confirmacion__boton--peligro {
+  background: var(--rojo);
+}
+
+.confirmacion__boton--confirmar.confirmacion__boton--peligro:hover {
+  filter: brightness(0.9);
+}
