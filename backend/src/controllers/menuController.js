@@ -36,8 +36,8 @@ const getProductosAdmin = async (req, res) => {
 // POST /api/menu/productos → crear producto
 const postProducto = async (req, res) => {
   try {
-    const { nombre, precio, id_categoria, disponible } = req.body;
-    const producto = await registrarProducto(nombre, precio, id_categoria, disponible);
+    const { nombre, precio, id_categoria, disponible, receta } = req.body || {};
+    const producto = await registrarProducto(nombre, precio, id_categoria, disponible, receta);
     res.status(201).json(producto);
   } catch (error) {
     res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });
@@ -48,8 +48,8 @@ const postProducto = async (req, res) => {
 const putProducto = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, precio, id_categoria, disponible } = req.body;
-    const producto = await editarProducto(id, nombre, precio, id_categoria, disponible);
+    const { nombre, precio, id_categoria, disponible, receta } = req.body || {};
+    const producto = await editarProducto(id, nombre, precio, id_categoria, disponible, receta);
     res.status(200).json(producto);
   } catch (error) {
     res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });

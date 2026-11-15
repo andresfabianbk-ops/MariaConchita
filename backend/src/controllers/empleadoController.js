@@ -1,6 +1,6 @@
 // Importa la lógica de negocio
 const {
-  crearEmpleado, listarEmpleados, iniciarSesion, editarEmpleado, bloquearEmpleado, activarEmpleado, cambiarContrasena } = require('../services/empleadoService');
+  crearEmpleado, listarEmpleados, iniciarSesion, editarEmpleado, bloquearEmpleado, activarEmpleado, cambiarContrasena, eliminarEmpleado, listarEmpleadosEliminados } = require('../services/empleadoService');
 
 // Traduce el código de error de negocio a un status HTTP
 function mapearStatus(codigo) {
@@ -96,4 +96,25 @@ const putContrasena = async (req, res) => {
   }
 };
 
-module.exports = { postEmpleado, getEmpleados, postLogin, putEmpleado, putBloquearEmpleado, putActivarEmpleado, putContrasena };
+// DELETE /api/empleados/:id → elimina al empleado y lo archiva en el historial
+const deleteEmpleado = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await eliminarEmpleado(id, req.usuario.id_usuario);
+    res.status(200).json({ mensaje: 'Empleado eliminado correctamente' });
+  } catch (error) {
+    res.status(mapearStatus(error.codigo)).json({ mensaje: error.message });
+  }
+};
+
+// GET /api/empleados/eliminados → historial de empleados eliminados
+const getEmpleadosEliminados = async (req, res) => {
+  try {
+    const eliminados = await listarEmpleadosEliminados();
+    res.status(200).json(eliminados);
+  } catch (error) {
+    res.status(500).json({ mensaje: error.message });
+  }
+};
+
+module.exports = { postEmpleado, getEmpleados, postLogin, putEmpleado, putBloquearEmpleado, putActivarEmpleado, putContrasena, deleteEmpleado, getEmpleadosEliminados };

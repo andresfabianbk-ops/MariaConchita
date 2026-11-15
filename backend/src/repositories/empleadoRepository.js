@@ -194,6 +194,56 @@ const contarOtrosAdministradoresActivos = async (idExcluir) => {
   return Number(filas[0].total);
 };
 
+// Mueve al empleado a EmpleadoEliminado y lo borra de Usuario, todo en una transacción.
+// Devuelve las filas borradas de Usuario (0 si el id no existe).
+const archivarYEliminarEmpleado = async (id, idEliminador) => {
+  const conexion = await db.getConnection();
+  try {
+    await conexion.beginTransaction();
+
+    const [insercion] = await conexion.query(
+      `INSERT INTO EmpleadoEliminado
+         (id_usuario_original, tipo_documento, numero_documento, nombres, apellidos,
+          fecha_nacimiento, correo, celular, cargo, fecha_registro, eliminado_por)
+       SELECT u.id_usuario, u.tipo_documento, u.numero_documento, u.nombres, u.apellidos,
+              u.fecha_nacimiento, u.correo, u.celular, r.nombre, u.fecha_registro, ?
+       FROM Usuario u
+       JOIN Rol r ON r.id_rol = u.id_rol
+       WHERE u.id_usuario = ?`,
+      [idEliminador, id]
+    );
+
+    // Si no se archivó nada, no se borra: así nunca se pierde un empleado sin dejar historial
+    if (insercion.affectedRows === 0) {
+      await conexion.rollback();
+      return 0;
+    }
+
+    const [resultado] = await conexion.query('DELETE FROM Usuario WHERE id_usuario = ?', [id]);
+    await conexion.commit();
+    return resultado.affectedRows;
+  } catch (error) {
+    await conexion.rollback(); // si algo falla, no se archiva ni se borra nada
+    throw error;
+  } finally {
+    conexion.release();
+  }
+};
+
+// Historial de empleados eliminados, el más reciente primero (mismos alias camelCase que obtenerEmpleados)
+const obtenerEmpleadosEliminados = async () => {
+  const [filas] = await db.query(
+    `SELECT id_empleado_eliminado, id_usuario_original,
+            tipo_documento AS tipoDocumento, numero_documento AS numeroDocumento,
+            nombres, apellidos, fecha_nacimiento AS fechaNacimiento, correo, celular, cargo,
+            fecha_registro AS fechaRegistro, fecha_eliminacion AS fechaEliminacion,
+            eliminado_por AS eliminadoPor
+     FROM EmpleadoEliminado
+     ORDER BY fecha_eliminacion DESC`
+  );
+  return filas;
+};
+
 module.exports = { guardarEmpleado,
   obtenerEmpleados,
   buscarPorCorreo,
@@ -209,4 +259,6 @@ module.exports = { guardarEmpleado,
   existeDocumentoDuplicado,
   registrarIntentoFallido,
   reiniciarIntentosFallidos,
-  contarOtrosAdministradoresActivos };
+  contarOtrosAdministradoresActivos,
+  archivarYEliminarEmpleado,
+  obtenerEmpleadosEliminados };

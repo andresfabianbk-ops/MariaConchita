@@ -19,11 +19,11 @@ router.post('/', verificarToken, verificarRol('Administrador', 'Cajero', 'Mesero
 // GET /api/pedidos → listar pedidos (filtros: tipo, estado, abiertos)
 router.get('/', verificarToken, verificarRol('Administrador', 'Cajero', 'Cocinero', 'Mesero'), getPedidos);
 
-// PUT /api/pedidos/:id → avanzar al siguiente estado (En preparación, Listo, Entregado)
-router.put('/:id', verificarToken, verificarRol('Administrador', 'Cajero', 'Cocinero'), putEstadoPedido);
+// PUT /api/pedidos/:id → avanzar al siguiente estado (En preparación, Listo, Entregado); el Mesero solo a Entregado
+router.put('/:id', verificarToken, verificarRol('Administrador', 'Cajero', 'Cocinero', 'Mesero'), putEstadoPedido);
 
 // PUT /api/pedidos/:id/cancelar → cancelar pedido Pendiente y devolver stock
-router.put('/:id/cancelar', verificarToken, verificarRol('Administrador', 'Cajero'), putCancelarPedido);
+router.put('/:id/cancelar', verificarToken, verificarRol('Administrador', 'Cajero', 'Mesero'), putCancelarPedido);
 
 // PUT /api/pedidos/:id/confirmar-cancelacion → la cocina confirma el aviso de cancelación
 router.put('/:id/confirmar-cancelacion', verificarToken, verificarRol('Administrador', 'Cocinero'), putConfirmarCancelacion);

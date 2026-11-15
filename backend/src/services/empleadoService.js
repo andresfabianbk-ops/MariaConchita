@@ -14,7 +14,10 @@ const { guardarEmpleado,
   existeDocumentoDuplicado, 
   registrarIntentoFallido, 
   reiniciarIntentosFallidos, 
-  contarOtrosAdministradoresActivos} = require('../repositories/empleadoRepository');
+  contarOtrosAdministradoresActivos,
+  archivarYEliminarEmpleado,
+  obtenerEmpleadosEliminados
+} = require('../repositories/empleadoRepository');
 
   const MAX_INTENTOS_LOGIN = 3;
 
@@ -231,9 +234,38 @@ const bloquearEmpleado = async (id, idSolicitante) => {
     throw error;
   }
 
-  await cambiarEstadoEmpleado(id, 'Bloqueado'), idSolicitante;
+  await cambiarEstadoEmpleado(id, 'Bloqueado', idSolicitante);
   return true;
 };
+
+// Elimina un empleado: lo quita de Usuario y lo archiva en EmpleadoEliminado (historial de personal)
+const eliminarEmpleado = async (id, idSolicitante) => {
+  // Nadie se elimina a sí mismo. No hace falta proteger al último Administrador activo:
+  // quien elimina ya es un Administrador activo distinto del eliminado
+  if (Number(id) === Number(idSolicitante)) {
+    const error = new Error('No puedes eliminar tu propio usuario');
+    error.codigo = 'OPERACION_NO_PERMITIDA';
+    throw error;
+  }
+
+  const empleadoExistente = await obtenerEmpleadoPorId(id);
+  if (!empleadoExistente) {
+    const error = new Error('Empleado no encontrado');
+    error.codigo = 'NO_ENCONTRADA';
+    throw error;
+  }
+
+  const eliminados = await archivarYEliminarEmpleado(id, idSolicitante);
+  if (eliminados === 0) {
+    const error = new Error('Empleado no encontrado');
+    error.codigo = 'NO_ENCONTRADA';
+    throw error;
+  }
+  return true;
+};
+
+// Historial de empleados eliminados
+const listarEmpleadosEliminados = async () => obtenerEmpleadosEliminados();
 
 // Reactiva un empleado previamente desactivado
 const activarEmpleado = async (id, idModificador) => {
@@ -246,7 +278,7 @@ const activarEmpleado = async (id, idModificador) => {
 
   await cambiarEstadoEmpleado(id, 'Activo',  idModificador);
   await reiniciarCierresVacios(id); // desbloqueo: el contador del mes vuelve a 0
-    await reiniciarIntentosFallidos(id); // el desbloqueo también reinicia los intentos de login
+  await reiniciarIntentosFallidos(id); // el desbloqueo también reinicia los intentos de login
   return true;
 };
 
@@ -275,4 +307,4 @@ async function cambiarContrasena(id, contrasenaNueva, idModificador) {
   return true;
 }
 
-module.exports = { crearEmpleado, listarEmpleados, iniciarSesion, editarEmpleado, bloquearEmpleado, activarEmpleado, cambiarContrasena, obtenerEmpleadoDeSesion };
+module.exports = { crearEmpleado, listarEmpleados, iniciarSesion, editarEmpleado, bloquearEmpleado, activarEmpleado, cambiarContrasena, obtenerEmpleadoDeSesion, eliminarEmpleado, listarEmpleadosEliminados };

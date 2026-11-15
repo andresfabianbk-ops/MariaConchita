@@ -49,17 +49,21 @@ const listarTurnos = async ({ fechaDesde, fechaHasta, idUsuario } = {}) => {
   if (idUsuario) { condiciones.push('t.id_usuario = ?'); parametros.push(idUsuario); }
   const where = condiciones.length ? `WHERE ${condiciones.join(' AND ')}` : '';
 
-  const [filas] = await db.query(
-    `SELECT t.id_turno, t.id_usuario, u.nombres, u.apellidos, r.nombre AS cargo,
+    const [filas] = await db.query(
+    `SELECT t.id_turno, t.id_usuario,
+            COALESCE(u.nombres, e.nombres) AS nombres,
+            COALESCE(u.apellidos, e.apellidos) AS apellidos,
+            COALESCE(r.nombre, e.cargo) AS cargo,
             t.hora_inicio, t.hora_fin
      FROM Turno t
-     JOIN Usuario u ON u.id_usuario = t.id_usuario
-     JOIN Rol r ON r.id_rol = u.id_rol
+     LEFT JOIN Usuario u ON u.id_usuario = t.id_usuario
+     LEFT JOIN Rol r ON r.id_rol = u.id_rol
+     LEFT JOIN EmpleadoEliminado e ON e.id_usuario_original = t.id_usuario
      ${where}
      ORDER BY t.hora_inicio DESC
      LIMIT 200`,
     parametros
-  );
+    );
   return filas;
 };
 

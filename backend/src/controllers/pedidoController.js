@@ -51,7 +51,16 @@ const getPedidos = async (req, res) => {
 const putEstadoPedido = async (req, res) => {
   try {
     const idPedido = Number(req.params.id);
-    const pedido = await cambiarEstadoPedido(idPedido, req.body?.estado);
+    const nuevoEstado = req.body?.estado;
+
+    // El Mesero solo puede confirmar la entrega; el resto de estados es de cocina y caja
+    if (req.usuario.cargo === 'Mesero' && nuevoEstado !== 'Entregado') {
+      const error = new Error('El Mesero solo puede marcar un pedido como Entregado');
+      error.codigo = 'OPERACION_NO_PERMITIDA';
+      throw error;
+    }
+
+    const pedido = await cambiarEstadoPedido(idPedido, nuevoEstado);
     res.status(200).json(pedido);
   } catch (error) {
     responderError(res, error);

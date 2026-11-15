@@ -11,6 +11,8 @@ function mapearStatus(codigo) {
       return 403; // no 401: el frontend lo interpreta como sesión expirada
     case 'CUENTA_BLOQUEADA':
       return 403; // no 401: el frontend lo interpreta como sesión expirada
+    case 'DEMASIADOS_INTENTOS':
+      return 429;
     case 'NO_ENCONTRADA':
       return 404;
     case 'DUPLICADO':

@@ -17,6 +17,33 @@ const {
 // Cierres de turno vacíos acumulados en el mes que provocan el bloqueo
 const LIMITE_CIERRES_VACIOS = 3;
 
+// Límite de intentos fallidos al marcar turno (por documento, en memoria del servidor)
+const MAX_INTENTOS_MARCAR = 3;
+const BLOQUEO_MARCAR_MS = 15 * 60 * 1000;
+const intentosMarcar = new Map(); // numeroDocumento -> { fallos, bloqueadoHasta }
+
+// Rechaza el intento si el documento está bloqueado por intentos fallidos
+const verificarSinBloqueoPorIntentos = (documento) => {
+  const registro = intentosMarcar.get(documento);
+  if (!registro || !registro.bloqueadoHasta) return;
+
+  if (Date.now() < registro.bloqueadoHasta) {
+    const minutos = Math.ceil((registro.bloqueadoHasta - Date.now()) / 60000);
+    throw crearError(`Demasiados intentos fallidos. Intenta de nuevo en ${minutos} minuto(s)`, 'DEMASIADOS_INTENTOS');
+  }
+  intentosMarcar.delete(documento); // el bloqueo ya venció
+};
+
+// Suma un fallo; al llegar al máximo bloquea el documento
+const registrarIntentoFallido = (documento) => {
+  const registro = intentosMarcar.get(documento) || { fallos: 0, bloqueadoHasta: null };
+  registro.fallos += 1;
+  if (registro.fallos >= MAX_INTENTOS_MARCAR) {
+    registro.bloqueadoHasta = Date.now() + BLOQUEO_MARCAR_MS;
+  }
+  intentosMarcar.set(documento, registro);
+};
+
 // Crea un error de negocio con su código (el controller lo traduce a HTTP)
 const crearError = (mensaje, codigo) => {
   const error = new Error(mensaje);
@@ -108,14 +135,19 @@ const registrarTurnoEmpleado = async (numeroDocumento, contrasena, accion) => {
     throw crearError("La acción debe ser 'inicio' o 'cierre'", 'DATOS_INVALIDOS');
   }
 
-  const empleado = await buscarPorDocumento(String(numeroDocumento));
+    const documento = String(numeroDocumento);
+  verificarSinBloqueoPorIntentos(documento);
+
+  const empleado = await buscarPorDocumento(documento);
   const credencialesValidas = empleado
     && empleado.estado !== 'Inactivo'
     && await bcrypt.compare(String(contrasena), empleado.contrasena);
   if (!credencialesValidas) {
+    registrarIntentoFallido(documento);
     // mensaje genérico: no revela si el documento existe o está inactivo
     throw crearError('Documento o contraseña incorrectos', 'CREDENCIALES_INVALIDAS');
   }
+  intentosMarcar.delete(documento); // credenciales correctas: se reinicia el contador
   verificarPuedeMarcar(empleado);
 
   let aviso = null;

@@ -7,11 +7,13 @@ const {
   putEmpleado,
   putBloquearEmpleado,
   putActivarEmpleado,
-  putContrasena
+  putContrasena,
+  deleteEmpleado,
+  getEmpleadosEliminados
 } = require('../controllers/empleadoController');
+
 const { verificarToken, verificarRol } = require('../middlewares/authMiddleware');
 const { contarEmpleados } = require('../repositories/empleadoRepository');
-
 const router = Router();
 
 // Permite crear el primer empleado sin token; a partir del segundo, exige Administrador autenticado
@@ -38,6 +40,12 @@ router.use(verificarToken, verificarRol('Administrador'));
 
 // GET /api/empleados → listar empleados
 router.get('/', getEmpleados);
+
+// GET /api/empleados/eliminados → historial de empleados eliminados
+router.get('/eliminados', getEmpleadosEliminados);
+
+// DELETE /api/empleados/:id → eliminar empleado (se archiva en EmpleadoEliminado)
+router.delete('/:id', deleteEmpleado);
 
 // PUT /api/empleados/:id → editar datos del empleado
 router.put('/:id', putEmpleado);
